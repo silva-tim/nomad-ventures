@@ -2,6 +2,13 @@ import 'dotenv/config';
 import express from 'express';
 import errorMiddleware from './lib/error-middleware.js';
 import pg from 'pg';
+import {
+  validateBody,
+  validateLocation,
+  validatePhotoURL,
+  validateSubtitle,
+  validateTitle,
+} from './lib/validations.js';
 
 // eslint-disable-next-line no-unused-vars -- Remove when used
 const db = new pg.Pool({
@@ -22,19 +29,27 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
-app.get('/api/users', async (req, res, next) => {
+app.post('/api/entries', async (req, res, next) => {
   try {
+    const { userId, title, subtitle, location, photoURL, body } = req.body;
+    validateTitle(title);
+    validateSubtitle(subtitle);
+    validateLocation(location);
+    validatePhotoURL(photoURL);
+    validateBody(body);
+
     const sql = `
-      select *
-        from "users"
+      insert into "entries" ("userId", "title", "subtitle", "location", "photoURL", "body")
+        values ($1, $2, $3, $4, $5, $6)
+        returning *
     `;
-    const result = await db.query(sql);
-    res.status(200).json(result.rows);
+    const params = [userId, title, subtitle, location, photoURL, body];
+    const result = await db.query(sql, params);
+    res.status(201).json(result.rows);
   } catch (err) {
     next(err);
   }
 });
-
 /**
  * Serves React's index.html if no api route matches.
  *
