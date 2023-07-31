@@ -31,7 +31,7 @@ app.use(express.json());
 
 app.post('/api/entries', async (req, res, next) => {
   try {
-    const { userId, title, subtitle, location, photoURL, body } = req.body;
+    const { title, subtitle, location, photoURL, body } = req.body;
     validateTitle(title);
     validateSubtitle(subtitle);
     validateLocation(location);
@@ -43,7 +43,7 @@ app.post('/api/entries', async (req, res, next) => {
         values ($1, $2, $3, $4, $5, $6)
         returning *
     `;
-    const params = [userId, title, subtitle, location, photoURL, body];
+    const params = [1, title, subtitle, location, photoURL, body];
     const result = await db.query(sql, params);
     res.status(201).json(result.rows);
   } catch (err) {
