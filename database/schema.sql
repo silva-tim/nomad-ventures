@@ -23,9 +23,12 @@ CREATE TABLE "public"."entries" (
 	"title" TEXT NOT NULL,
 	"subtitle" TEXT NOT NULL,
 	"location" TEXT NOT NULL,
-	"photoURL" TEXT NOT NULL,
 	"body" TEXT NOT NULL,
-	"date" TIMESTAMP NOT NULL,
+	"date" TIMESTAMP DEFAULT now() NOT NULL,
+  "photoURL" TEXT NOT NULL,
+	"photoAlt" TEXT NOT NULL,
+	"photoAuthor" TEXT NOT NULL,
+	"photoAuthorLink" TEXT NOT NULL,
 	CONSTRAINT "entries_pk" PRIMARY KEY ("entryId")
 ) WITH (
   OIDS=FALSE

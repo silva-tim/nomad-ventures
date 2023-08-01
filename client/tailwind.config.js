@@ -2,7 +2,16 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#2D2D2D',
+        secondary: '#EEEEEE',
+      },
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };

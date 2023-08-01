@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import errorMiddleware from './lib/error-middleware.js';
 import pg from 'pg';
+import { validateInput } from './lib/validations.js';
 
 // eslint-disable-next-line no-unused-vars -- Remove when used
 const db = new pg.Pool({
@@ -22,19 +23,45 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
-app.get('/api/users', async (req, res, next) => {
+app.post('/api/entries', async (req, res, next) => {
   try {
+    const { title, subtitle, location, body, url, author, authorURL, alt } =
+      req.body;
+    validateInput(title);
+    validateInput(subtitle);
+    validateInput(location);
+    validateInput(body);
+    validateInput(url);
+    validateInput(author);
+    validateInput(authorURL);
+    validateInput(alt);
+
     const sql = `
-      select *
-        from "users"
+      insert into "entries" ("userId", "title", "subtitle", "location", "body", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink")
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        returning *
     `;
-    const result = await db.query(sql);
-    res.status(200).json(result.rows);
+    const params = [
+      1,
+      title,
+      subtitle,
+      location,
+      body,
+      url,
+      alt,
+      author,
+      authorURL,
+    ];
+    const result = await db.query(sql, params);
+    res.status(201).json(result.rows);
   } catch (err) {
     next(err);
   }
 });
 
+app.get('/api/key', (req, res) => {
+  res.json(process.env.UNSPLASH_KEY);
+});
 /**
  * Serves React's index.html if no api route matches.
  *
