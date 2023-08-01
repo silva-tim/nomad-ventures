@@ -21,15 +21,3 @@ export type Photo = {
   };
   alt_description: string;
 };
-
-// export const placeholderPhoto: Photo = {
-//   id: "1",
-//   urls: {regular: '../../public/neom-llB7NfKnS8A-unsplash.jpg'},
-//   user: {
-//     name: '',
-//     links: {
-//       self: ''
-//     }
-//   },
-//   alt_description: 'placeholder image'
-// }
