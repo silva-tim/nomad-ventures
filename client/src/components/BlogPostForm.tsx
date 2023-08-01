@@ -1,28 +1,54 @@
 import { AiOutlineLeft } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { FaLocationDot } from 'react-icons/fa6';
-import { Entry } from '../lib/types';
+import { Entry, Photo } from '../lib/types';
 import { FormEvent, useState } from 'react';
+import UnsplashGallery from './UnsplashGallery';
 
 type props = {
   entry: Entry | undefined;
-  isNew: boolean;
 };
-export default function BlogPostForm({ entry, isNew }: props) {
+
+export default function BlogPostForm({ entry }: props) {
   const [title, setTitle] = useState(entry?.title ?? '');
   const [subtitle, setSubtitle] = useState(entry?.subtitle ?? '');
   const [location, setLocation] = useState(entry?.location ?? '');
-  const [photoURL, setPhotoURL] = useState(entry?.photoURL ?? '');
+  const [photoInfo, setPhotoInfo] = useState(entry?.photoInfo ?? undefined);
   const [body, setBody] = useState(entry?.body);
   const [error, setError] = useState<unknown>();
+  const [search, setSearch] = useState('');
+  const [photos, setPhotos] = useState<Array<Photo>>();
+  const [missingPhoto, setMissingPhoto] = useState(entry ? false : undefined);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!title || !subtitle || !location || !photoURL || !body) {
-      throw new Error('400', { cause: 'invalid request' });
+    if (!photoInfo) {
+      setMissingPhoto(true);
+      return;
     }
     try {
-      const entryInput: Entry = { title, subtitle, location, photoURL, body };
+      if (!title || !subtitle || !location || !body) {
+        throw new Error('Error: 400 invalid request');
+      }
+      const {
+        urls: { regular },
+        user: {
+          name,
+          links: { self },
+        },
+        alt_description,
+      } = photoInfo;
+      const entryInput: Entry = {
+        title,
+        subtitle,
+        location,
+        photoInfo,
+        body,
+        url: regular,
+        author: name,
+        authorURL: self,
+        alt: alt_description,
+      };
       const req = {
         method: 'POST',
         headers: {
@@ -37,6 +63,31 @@ export default function BlogPostForm({ entry, isNew }: props) {
     } catch (err) {
       setError(err);
     }
+  }
+
+  async function handleSearch() {
+    try {
+      if (!search) {
+        throw new Error('400', { cause: 'invalid request' });
+      }
+      const res = await fetch('/api/key');
+      const key = await res.json();
+      const result = await fetch(
+        `https://api.unsplash.com/search/photos?query=${search}&orientation=landscape&per_page=12&client_id=${key}`
+      );
+      const resultJSON = await result.json();
+      setPhotoInfo(undefined);
+      setPhotos(resultJSON.results);
+      setSearch('');
+    } catch (err) {
+      setError(err);
+    }
+  }
+
+  function handlePhotoClick(photo: Photo) {
+    setPhotoInfo(photo);
+    setMissingPhoto(false);
+    setPhotos(undefined);
   }
 
   if (error) {
@@ -58,7 +109,7 @@ export default function BlogPostForm({ entry, isNew }: props) {
         </Link>
         <div>
           <button type="submit" className="bg-green-400 px-7 rounded-3xl">
-            {isNew ? 'Publish' : 'Update'}
+            {entry ? 'Update' : 'Publish'}
           </button>
         </div>
       </div>
@@ -78,19 +129,37 @@ export default function BlogPostForm({ entry, isNew }: props) {
         </div>
         <div className="basis-1/2 bg-secondary me-1 flex justify-between">
           <input
-            onChange={(e) => setPhotoURL(e.target.value)}
-            value={photoURL}
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
             type="text"
             placeholder="Search Unsplash for Image"
             className="p-3 outline-0 bg-secondary text-xl basis-full"
           />
           <button
+            onClick={handleSearch}
             type="button"
-            className="bg-primary bg-opacity-90 text-white px-3">
+            className="bg-primary bg-opacity-90 text-white px-3"
+            disabled={search ? false : true}>
             Search
           </button>
         </div>
       </div>
+      <div className="h-max-content flex justify-center">
+        {missingPhoto && <span>Please add a photo.</span>}
+        {photoInfo && (
+          <img
+            className="object-cover h-full"
+            src={photoInfo?.urls.regular}
+            alt={photoInfo?.alt_description}
+          />
+        )}
+      </div>
+      {photos && (
+        <UnsplashGallery
+          photos={photos}
+          onPhotoClick={(photo) => handlePhotoClick(photo)}
+        />
+      )}
       <input
         onChange={(e) => setTitle(e.target.value)}
         value={title}
