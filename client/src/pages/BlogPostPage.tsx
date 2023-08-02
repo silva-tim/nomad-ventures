@@ -1,17 +1,20 @@
 import {
   PiBookmarksSimple,
   PiDotsThreeCircleFill,
+  PiDotsThreeCircleLight,
   PiHeartLight,
 } from 'react-icons/pi';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Entry } from '../lib/types';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import MoreOptions from '../components/MoreOptions';
 
 export default function BlogPostPage() {
   const { id: entryId } = useParams();
   const [error, setError] = useState<unknown>();
   const [entry, setEntry] = useState<Entry>();
+  const [moreOptions, setMoreOptions] = useState(false);
 
   useEffect(() => {
     async function getEntry() {
@@ -56,7 +59,7 @@ export default function BlogPostPage() {
             <h2 className="text-4xl pb-3">{entry.subtitle}</h2>
           </div>
           <div className="flex justify-between basis-full pb-4">
-            <span className="text-xl">{`by ${entry.photoAuthor}`}</span>
+            <span className="text-xl">{`by Tim Silva`}</span>
             <div className="flex">
               <FaLocationDot className="text-2xl mr-1" />
               <span className="text-xl">{entry.location}</span>
@@ -87,11 +90,24 @@ export default function BlogPostPage() {
         </div>
         <div className="pt-2">
           <div className="border-y border-primary py-2 text-3xl flex justify-between">
-            <PiHeartLight className="cursor-pointer" />
+            <PiHeartLight className="cursor-pointer hover:text-pink-500" />
             <div className="flex">
-              <PiBookmarksSimple className="cursor-pointer" />
-              <PiDotsThreeCircleFill className="cursor-pointer" />
+              <PiBookmarksSimple className="cursor-pointer hover:text-green-400" />
+              {moreOptions ? (
+                <PiDotsThreeCircleFill
+                  onClick={() => setMoreOptions(!moreOptions)}
+                  className="cursor-pointer"
+                />
+              ) : (
+                <PiDotsThreeCircleLight
+                  onClick={() => setMoreOptions(!moreOptions)}
+                  className="cursor-pointer"
+                />
+              )}
             </div>
+          </div>
+          <div className="relative flex justify-end">
+            {moreOptions && <MoreOptions />}
           </div>
           <div className="pt-2 text-lg">
             <p className="first-letter:text-4xl first-letter:font-bold first-letter:font-serif">

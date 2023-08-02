@@ -8,16 +8,18 @@ export default function NavBar() {
 
   return (
     <div>
-      <header className="sticky top-0 p-5 border-black bg-white border-b w-full z-10">
+      <header className="sticky top-0 p-4 border-black bg-white border-b w-full z-10">
         <nav>
           <div className="flex justify-between">
             <Link to="/">
               <span className="text-xl font-inter">NOMAD VENTURES</span>
             </Link>
-            <AiOutlineMenu
-              onClick={() => setSideIsOpen(true)}
-              className="text-3xl cursor-pointer hover:text-gray-500"
-            />
+            <div className="hover:bg-black hover:bg-opacity-10 rounded-xl">
+              <AiOutlineMenu
+                onClick={() => setSideIsOpen(true)}
+                className="text-3xl cursor-pointer"
+              />
+            </div>
           </div>
           <LinkDrawer
             isOpen={sideIsOpen}

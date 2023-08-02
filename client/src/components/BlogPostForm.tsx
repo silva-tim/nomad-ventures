@@ -4,7 +4,6 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { Entry, Photo } from '../lib/types';
 import { FormEvent, useState } from 'react';
 import UnsplashGallery from './UnsplashGallery';
-import BlogPostPage from '../pages/BlogPostPage';
 
 type props = {
   entry: Entry | undefined;
@@ -95,6 +94,7 @@ export default function BlogPostForm({ entry }: props) {
       setPhotoInfo(undefined);
       setPhotos(resultJSON.results);
       setSearch('');
+      setMissingPhoto(false);
     } catch (err) {
       setError(err);
     }
@@ -129,6 +129,22 @@ export default function BlogPostForm({ entry }: props) {
           </button>
         </div>
       </div>
+      {photoInfo && (
+        <div className="h-max-content flex justify-center mt-4">
+          {missingPhoto && <span>Please add a photo.</span>}
+          <img
+            className="object-cover h-96"
+            src={photoInfo?.urls.regular}
+            alt={photoInfo?.alt_description}
+          />
+        </div>
+      )}
+      {photos && (
+        <UnsplashGallery
+          photos={photos}
+          onPhotoClick={(photo) => handlePhotoClick(photo)}
+        />
+      )}
       <div className="flex mt-4">
         <div className="basis-1/2 bg-secondary me-1 flex justify-between">
           <input
@@ -143,7 +159,7 @@ export default function BlogPostForm({ entry }: props) {
           />
           <FaLocationDot className="text-3xl mr-1 mt-3" />
         </div>
-        <div className="basis-1/2 bg-secondary me-1 flex justify-between">
+        <div className="basis-1/2 bg-secondary flex justify-between">
           <input
             onChange={(e) => setSearch(e.target.value)}
             value={search}
@@ -154,13 +170,13 @@ export default function BlogPostForm({ entry }: props) {
           <button
             onClick={handleSearch}
             type="button"
-            className="bg-primary bg-opacity-90 text-white px-3"
+            className="bg-primary bg-opacity-90 text-white px-3 hover:bg-green-400 hover:text-primary"
             disabled={search ? false : true}>
             Search
           </button>
         </div>
       </div>
-      <div className="h-max-content flex justify-center">
+      {/* <div className="h-max-content flex justify-center">
         {missingPhoto && <span>Please add a photo.</span>}
         {photoInfo && (
           <img
@@ -169,13 +185,13 @@ export default function BlogPostForm({ entry }: props) {
             alt={photoInfo?.alt_description}
           />
         )}
-      </div>
-      {photos && (
+      </div> */}
+      {/* {photos && (
         <UnsplashGallery
           photos={photos}
           onPhotoClick={(photo) => handlePhotoClick(photo)}
         />
-      )}
+      )} */}
       <input
         onChange={(e) => setTitle(e.target.value)}
         value={title}
