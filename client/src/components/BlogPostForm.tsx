@@ -4,6 +4,7 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { Entry, Photo } from '../lib/types';
 import { FormEvent, useState } from 'react';
 import UnsplashGallery from './UnsplashGallery';
+import { createEntry, searchUnsplash } from '../lib/fetchFunctions';
 
 type props = {
   entry: Entry | undefined;
@@ -62,18 +63,7 @@ export default function BlogPostForm({ entry }: props) {
         photoAuthorLink: html,
         photoAlt: alt_description,
       };
-      const req = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(entryInput),
-      };
-      const res = await fetch('/api/entries', req);
-      if (!res.ok) {
-        throw new Error(`fetch Error ${res.status}`);
-      }
-      const entryReturn = await res.json();
+      const entryReturn = await createEntry(entryInput);
       navigate(`/post/${entryReturn[0].entryId}`);
     } catch (err) {
       setError(err);
@@ -85,12 +75,7 @@ export default function BlogPostForm({ entry }: props) {
       if (!search) {
         throw new Error('400', { cause: 'invalid request' });
       }
-      const res = await fetch('/api/key');
-      const key = await res.json();
-      const result = await fetch(
-        `https://api.unsplash.com/search/photos?query=${search}&orientation=landscape&per_page=12&client_id=${key}`
-      );
-      const resultJSON = await result.json();
+      const resultJSON = await searchUnsplash(search);
       setPhotoInfo(undefined);
       setPhotos(resultJSON.results);
       setSearch('');
@@ -176,22 +161,6 @@ export default function BlogPostForm({ entry }: props) {
           </button>
         </div>
       </div>
-      {/* <div className="h-max-content flex justify-center">
-        {missingPhoto && <span>Please add a photo.</span>}
-        {photoInfo && (
-          <img
-            className="object-cover h-full"
-            src={photoInfo?.urls.regular}
-            alt={photoInfo?.alt_description}
-          />
-        )}
-      </div> */}
-      {/* {photos && (
-        <UnsplashGallery
-          photos={photos}
-          onPhotoClick={(photo) => handlePhotoClick(photo)}
-        />
-      )} */}
       <input
         onChange={(e) => setTitle(e.target.value)}
         value={title}
