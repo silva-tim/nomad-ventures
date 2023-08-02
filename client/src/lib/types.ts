@@ -3,10 +3,10 @@ export type Entry = {
   subtitle: string;
   location: string;
   body: string;
-  url: string;
-  photographer: string;
-  photographerURL: string;
-  alt: string;
+  photoURL: string;
+  photoAlt: string;
+  photoAuthor: string;
+  photoAuthorLink: string;
 };
 
 export type Photo = {

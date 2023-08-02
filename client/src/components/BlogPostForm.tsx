@@ -1,29 +1,31 @@
 import { AiOutlineLeft } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Entry, Photo } from '../lib/types';
 import { FormEvent, useState } from 'react';
 import UnsplashGallery from './UnsplashGallery';
+import BlogPostPage from '../pages/BlogPostPage';
 
 type props = {
   entry: Entry | undefined;
 };
 
 export default function BlogPostForm({ entry }: props) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState(entry?.title ?? '');
   const [subtitle, setSubtitle] = useState(entry?.subtitle ?? '');
   const [location, setLocation] = useState(entry?.location ?? '');
   const [photoInfo, setPhotoInfo] = useState(
     entry
       ? {
-          urls: { regular: entry.url },
+          urls: { regular: entry.photoURL },
           user: {
-            name: entry.photographer,
+            name: entry.photoAuthor,
             links: {
-              html: entry.photographerURL,
+              html: entry.photoAuthorLink,
             },
           },
-          alt_description: entry.alt,
+          alt_description: entry.photoAlt,
         }
       : undefined
   );
@@ -56,10 +58,10 @@ export default function BlogPostForm({ entry }: props) {
         subtitle,
         location,
         body,
-        url: regular,
-        photographer: name,
-        photographerURL: html,
-        alt: alt_description,
+        photoURL: regular,
+        photoAuthor: name,
+        photoAuthorLink: html,
+        photoAlt: alt_description,
       };
       const req = {
         method: 'POST',
@@ -72,6 +74,8 @@ export default function BlogPostForm({ entry }: props) {
       if (!res.ok) {
         throw new Error(`fetch Error ${res.status}`);
       }
+      const entryReturn = await res.json();
+      navigate(`/post/${entryReturn[0].entryId}`);
     } catch (err) {
       setError(err);
     }
