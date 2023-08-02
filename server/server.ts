@@ -3,6 +3,7 @@ import express from 'express';
 import errorMiddleware from './lib/error-middleware.js';
 import pg from 'pg';
 import { validateInput } from './lib/validations.js';
+import ClientError from './lib/client-error.js';
 
 // eslint-disable-next-line no-unused-vars -- Remove when used
 const db = new pg.Pool({
@@ -25,16 +26,24 @@ app.use(express.json());
 
 app.post('/api/entries', async (req, res, next) => {
   try {
-    const { title, subtitle, location, body, url, author, authorURL, alt } =
-      req.body;
+    const {
+      title,
+      subtitle,
+      location,
+      body,
+      photoURL,
+      photoAuthor,
+      photoAuthorLink,
+      photoAlt,
+    } = req.body;
     validateInput(title);
     validateInput(subtitle);
     validateInput(location);
     validateInput(body);
-    validateInput(url);
-    validateInput(author);
-    validateInput(authorURL);
-    validateInput(alt);
+    validateInput(photoURL);
+    validateInput(photoAuthor);
+    validateInput(photoAuthorLink);
+    validateInput(photoAlt);
 
     const sql = `
       insert into "entries" ("userId", "title", "subtitle", "location", "body", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink")
@@ -47,13 +56,35 @@ app.post('/api/entries', async (req, res, next) => {
       subtitle,
       location,
       body,
-      url,
-      alt,
-      author,
-      authorURL,
+      photoURL,
+      photoAlt,
+      photoAuthor,
+      photoAuthorLink,
     ];
     const result = await db.query(sql, params);
     res.status(201).json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/entries/:entryId', async (req, res, next) => {
+  try {
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId <= 0) {
+      throw new ClientError(400, `${entryId} does not exist`);
+    }
+    const sql = `
+      select *
+        from "entries"
+        where "entryId" = $1
+    `;
+    const params = [entryId];
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      throw new ClientError(404, `Cannot find blog post ${entryId}`);
+    }
+    res.status(200).json(result.rows[0]);
   } catch (err) {
     next(err);
   }

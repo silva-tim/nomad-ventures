@@ -1,23 +1,38 @@
 import { AiOutlineLeft } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Entry, Photo } from '../lib/types';
 import { FormEvent, useState } from 'react';
 import UnsplashGallery from './UnsplashGallery';
+import { createEntry, searchUnsplash } from '../lib/fetchFunctions';
 
 type props = {
   entry: Entry | undefined;
 };
 
 export default function BlogPostForm({ entry }: props) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState(entry?.title ?? '');
   const [subtitle, setSubtitle] = useState(entry?.subtitle ?? '');
   const [location, setLocation] = useState(entry?.location ?? '');
-  const [photoInfo, setPhotoInfo] = useState(entry?.photoInfo ?? undefined);
+  const [photoInfo, setPhotoInfo] = useState(
+    entry
+      ? {
+          urls: { regular: entry.photoURL },
+          user: {
+            name: entry.photoAuthor,
+            links: {
+              html: entry.photoAuthorLink,
+            },
+          },
+          alt_description: entry.photoAlt,
+        }
+      : undefined
+  );
   const [body, setBody] = useState(entry?.body);
   const [error, setError] = useState<unknown>();
   const [search, setSearch] = useState('');
-  const [photos, setPhotos] = useState<Array<Photo>>();
+  const [photos, setPhotos] = useState<Photo[]>();
   const [missingPhoto, setMissingPhoto] = useState(entry ? false : undefined);
 
   async function handleSubmit(event: FormEvent) {
@@ -34,7 +49,7 @@ export default function BlogPostForm({ entry }: props) {
         urls: { regular },
         user: {
           name,
-          links: { self },
+          links: { html },
         },
         alt_description,
       } = photoInfo;
@@ -42,24 +57,14 @@ export default function BlogPostForm({ entry }: props) {
         title,
         subtitle,
         location,
-        photoInfo,
         body,
-        url: regular,
-        author: name,
-        authorURL: self,
-        alt: alt_description,
+        photoURL: regular,
+        photoAuthor: name,
+        photoAuthorLink: html,
+        photoAlt: alt_description,
       };
-      const req = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(entryInput),
-      };
-      const res = await fetch('/api/entries', req);
-      if (!res.ok) {
-        throw new Error(`fetch Error ${res.status}`);
-      }
+      const entryReturn = await createEntry(entryInput);
+      navigate(`/post/${entryReturn[0].entryId}`);
     } catch (err) {
       setError(err);
     }
@@ -70,15 +75,11 @@ export default function BlogPostForm({ entry }: props) {
       if (!search) {
         throw new Error('400', { cause: 'invalid request' });
       }
-      const res = await fetch('/api/key');
-      const key = await res.json();
-      const result = await fetch(
-        `https://api.unsplash.com/search/photos?query=${search}&orientation=landscape&per_page=12&client_id=${key}`
-      );
-      const resultJSON = await result.json();
+      const resultJSON = await searchUnsplash(search);
       setPhotoInfo(undefined);
       setPhotos(resultJSON.results);
       setSearch('');
+      setMissingPhoto(false);
     } catch (err) {
       setError(err);
     }
@@ -113,6 +114,22 @@ export default function BlogPostForm({ entry }: props) {
           </button>
         </div>
       </div>
+      {photoInfo && (
+        <div className="h-max-content flex justify-center mt-4">
+          {missingPhoto && <span>Please add a photo.</span>}
+          <img
+            className="object-cover h-96"
+            src={photoInfo?.urls.regular}
+            alt={photoInfo?.alt_description}
+          />
+        </div>
+      )}
+      {photos && (
+        <UnsplashGallery
+          photos={photos}
+          onPhotoClick={(photo) => handlePhotoClick(photo)}
+        />
+      )}
       <div className="flex mt-4">
         <div className="basis-1/2 bg-secondary me-1 flex justify-between">
           <input
@@ -127,7 +144,7 @@ export default function BlogPostForm({ entry }: props) {
           />
           <FaLocationDot className="text-3xl mr-1 mt-3" />
         </div>
-        <div className="basis-1/2 bg-secondary me-1 flex justify-between">
+        <div className="basis-1/2 bg-secondary flex justify-between">
           <input
             onChange={(e) => setSearch(e.target.value)}
             value={search}
@@ -138,28 +155,12 @@ export default function BlogPostForm({ entry }: props) {
           <button
             onClick={handleSearch}
             type="button"
-            className="bg-primary bg-opacity-90 text-white px-3"
+            className="bg-primary bg-opacity-90 text-white px-3 hover:bg-green-400 hover:text-primary"
             disabled={search ? false : true}>
             Search
           </button>
         </div>
       </div>
-      <div className="h-max-content flex justify-center">
-        {missingPhoto && <span>Please add a photo.</span>}
-        {photoInfo && (
-          <img
-            className="object-cover h-full"
-            src={photoInfo?.urls.regular}
-            alt={photoInfo?.alt_description}
-          />
-        )}
-      </div>
-      {photos && (
-        <UnsplashGallery
-          photos={photos}
-          onPhotoClick={(photo) => handlePhotoClick(photo)}
-        />
-      )}
       <input
         onChange={(e) => setTitle(e.target.value)}
         value={title}

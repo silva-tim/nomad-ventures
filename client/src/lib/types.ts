@@ -2,12 +2,11 @@ export type Entry = {
   title: string;
   subtitle: string;
   location: string;
-  photoInfo: Photo;
   body: string;
-  url: string;
-  author: string;
-  authorURL: string;
-  alt: string;
+  photoURL: string;
+  photoAlt: string;
+  photoAuthor: string;
+  photoAuthorLink: string;
 };
 
 export type Photo = {
@@ -16,7 +15,7 @@ export type Photo = {
   user: {
     name: string;
     links: {
-      self: string;
+      html: string;
     };
   };
   alt_description: string;
