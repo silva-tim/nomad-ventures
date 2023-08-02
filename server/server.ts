@@ -25,15 +25,23 @@ app.use(express.json());
 
 app.post('/api/entries', async (req, res, next) => {
   try {
-    const { title, subtitle, location, body, url, author, authorURL, alt } =
-      req.body;
+    const {
+      title,
+      subtitle,
+      location,
+      body,
+      url,
+      photographer,
+      photographerURL,
+      alt,
+    } = req.body;
     validateInput(title);
     validateInput(subtitle);
     validateInput(location);
     validateInput(body);
     validateInput(url);
-    validateInput(author);
-    validateInput(authorURL);
+    validateInput(photographer);
+    validateInput(photographerURL);
     validateInput(alt);
 
     const sql = `
@@ -49,8 +57,8 @@ app.post('/api/entries', async (req, res, next) => {
       body,
       url,
       alt,
-      author,
-      authorURL,
+      photographer,
+      photographerURL,
     ];
     const result = await db.query(sql, params);
     res.status(201).json(result.rows);

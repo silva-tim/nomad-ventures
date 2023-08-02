@@ -13,11 +13,24 @@ export default function BlogPostForm({ entry }: props) {
   const [title, setTitle] = useState(entry?.title ?? '');
   const [subtitle, setSubtitle] = useState(entry?.subtitle ?? '');
   const [location, setLocation] = useState(entry?.location ?? '');
-  const [photoInfo, setPhotoInfo] = useState(entry?.photoInfo ?? undefined);
+  const [photoInfo, setPhotoInfo] = useState(
+    entry
+      ? {
+          urls: { regular: entry.url },
+          user: {
+            name: entry.photographer,
+            links: {
+              html: entry.photographerURL,
+            },
+          },
+          alt_description: entry.alt,
+        }
+      : undefined
+  );
   const [body, setBody] = useState(entry?.body);
   const [error, setError] = useState<unknown>();
   const [search, setSearch] = useState('');
-  const [photos, setPhotos] = useState<Array<Photo>>();
+  const [photos, setPhotos] = useState<Photo[]>();
   const [missingPhoto, setMissingPhoto] = useState(entry ? false : undefined);
 
   async function handleSubmit(event: FormEvent) {
@@ -34,7 +47,7 @@ export default function BlogPostForm({ entry }: props) {
         urls: { regular },
         user: {
           name,
-          links: { self },
+          links: { html },
         },
         alt_description,
       } = photoInfo;
@@ -42,11 +55,10 @@ export default function BlogPostForm({ entry }: props) {
         title,
         subtitle,
         location,
-        photoInfo,
         body,
         url: regular,
-        author: name,
-        authorURL: self,
+        photographer: name,
+        photographerURL: html,
         alt: alt_description,
       };
       const req = {
