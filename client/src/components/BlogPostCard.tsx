@@ -10,27 +10,27 @@ export default function BlogPostCard() {
   }
 
   return (
-    <div
-      onMouseEnter={handleUnderline}
-      onMouseLeave={handleUnderline}
-      className="h-48 border-b border-black mt-3 cursor-pointer">
+    <div className="h-48 border-b border-black mt-3 cursor-pointer">
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center">
-          <div className="w-10 h-10">
+          {/* <div className="w-10 h-10">
             <img
               className="w-full h-full object-cover rounded-full border-green-400 border"
               src="https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B"
               alt="Default avatar"
             />
-          </div>
-          <span className="pl-2">Tim Silva</span>
+          </div> */}
+          <span>Tim Silva</span>
         </div>
         <div className="flex">
           <PiHeartFill className="text-2xl mr-1" />
           <span>232</span>
         </div>
       </div>
-      <div className="flex h-32">
+      <div
+        className="flex h-32"
+        onMouseEnter={handleUnderline}
+        onMouseLeave={handleUnderline}>
         <div className="basis-1/3 h-full">
           <img
             className="object-cover w-full h-full"
