@@ -7,6 +7,7 @@ export type Entry = {
   photoAlt: string;
   photoAuthor: string;
   photoAuthorLink: string;
+  entryId: number | undefined;
 };
 
 export type Photo = {

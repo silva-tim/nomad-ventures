@@ -90,7 +90,7 @@ export default function BlogPostPage() {
         </div>
         <div className="pt-2">
           <div className="border-y border-primary py-2 text-3xl flex justify-between">
-            <PiHeartLight className="cursor-pointer hover:text-pink-500" />
+            <PiHeartLight className="cursor-pointer hover:text-red-600" />
             <div className="flex">
               <PiBookmarksSimple className="cursor-pointer hover:text-green-400" />
               {moreOptions ? (

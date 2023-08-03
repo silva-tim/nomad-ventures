@@ -5,6 +5,7 @@ import { Entry, Photo } from '../lib/types';
 import { FormEvent, useState } from 'react';
 import UnsplashGallery from './UnsplashGallery';
 import { createEntry, searchUnsplash } from '../lib/fetchFunctions';
+import { PiSpinnerGap } from 'react-icons/pi';
 
 type props = {
   entry: Entry | undefined;
@@ -34,6 +35,7 @@ export default function BlogPostForm({ entry }: props) {
   const [search, setSearch] = useState('');
   const [photos, setPhotos] = useState<Photo[]>();
   const [missingPhoto, setMissingPhoto] = useState(entry ? false : undefined);
+  const [loadingAnimation, setLoadingAnimation] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -62,6 +64,7 @@ export default function BlogPostForm({ entry }: props) {
         photoAuthor: name,
         photoAuthorLink: html,
         photoAlt: alt_description,
+        entryId: undefined,
       };
       const entryReturn = await createEntry(entryInput);
       navigate(`/post/${entryReturn[0].entryId}`);
@@ -71,6 +74,7 @@ export default function BlogPostForm({ entry }: props) {
   }
 
   async function handleSearch() {
+    setLoadingAnimation(true);
     try {
       if (!search) {
         throw new Error('400', { cause: 'invalid request' });
@@ -79,6 +83,7 @@ export default function BlogPostForm({ entry }: props) {
       setPhotoInfo(undefined);
       setPhotos(resultJSON.results);
       setSearch('');
+      setLoadingAnimation(false);
       setMissingPhoto(false);
     } catch (err) {
       setError(err);
@@ -155,9 +160,12 @@ export default function BlogPostForm({ entry }: props) {
           <button
             onClick={handleSearch}
             type="button"
-            className="bg-primary bg-opacity-90 text-white px-3 hover:bg-green-400 hover:text-primary"
+            className={`bg-primary bg-opacity-90 text-white px-3 w-24 ${
+              search && `hover:bg-tertiary `
+            }`}
             disabled={search ? false : true}>
-            Search
+            {loadingAnimation && <PiSpinnerGap className="animate-spin ml-5" />}
+            {!loadingAnimation && 'Search'}
           </button>
         </div>
       </div>
