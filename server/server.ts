@@ -90,6 +90,21 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
   }
 });
 
+app.get('/api/entries', async (req, res, next) => {
+  try {
+    const sql = `
+      select *
+        from "entries"
+        order by "date" desc
+        limit 15
+    `;
+    const result = await db.query(sql);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.get('/api/key', (req, res) => {
   res.json(process.env.UNSPLASH_KEY);
 });
