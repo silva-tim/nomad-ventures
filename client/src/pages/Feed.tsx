@@ -30,7 +30,7 @@ export default function Feed() {
   if (!entries) {
     return <div>Loading...</div>;
   }
-  console.log(entries);
+
   return (
     <div className="max-w-screen-md m-auto">
       {entries.map((index) => (

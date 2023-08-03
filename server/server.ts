@@ -68,6 +68,58 @@ app.post('/api/entries', async (req, res, next) => {
   }
 });
 
+app.put('/api/entries/:entryId', async (req, res, next) => {
+  try {
+    const {
+      title,
+      subtitle,
+      location,
+      body,
+      photoURL,
+      photoAuthor,
+      photoAuthorLink,
+      photoAlt,
+    } = req.body;
+    const entryId = Number(req.params.entryId);
+    validateInput(title);
+    validateInput(subtitle);
+    validateInput(location);
+    validateInput(body);
+    validateInput(photoURL);
+    validateInput(photoAuthor);
+    validateInput(photoAuthorLink);
+    validateInput(photoAlt);
+
+    const sql = `
+      update "entries"
+        set "title" =  $1,
+            "subtitle" = $2,
+            "location" = $3,
+            "body" = $4,
+            "photoURL" = $5,
+            "photoAlt" = $6,
+            "photoAuthor" = $7,
+            "photoAuthorLink" = $8
+        where "entryId" = $9
+    `;
+    const params = [
+      title,
+      subtitle,
+      location,
+      body,
+      photoURL,
+      photoAlt,
+      photoAuthor,
+      photoAuthorLink,
+      entryId,
+    ];
+    await db.query(sql, params);
+    res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.get('/api/entries/:entryId', async (req, res, next) => {
   try {
     const entryId = Number(req.params.entryId);

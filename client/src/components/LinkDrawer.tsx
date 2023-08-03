@@ -30,7 +30,7 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
                 </Link>
               </div>
               <div className="basis-full pt-5 ps-2">
-                <Link to="new-adventure">
+                <Link to="/new-adventure">
                   <span
                     onClick={onClick}
                     className="text-2xl hover:text-tertiary">

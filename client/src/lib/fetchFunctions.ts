@@ -17,6 +17,20 @@ export async function createEntry(entryInput: Entry) {
   return await res.json();
 }
 
+export async function updateEntry(entryInput: Entry) {
+  const req = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(entryInput),
+  };
+  const res = await fetch(`/api/entries/${entryInput.entryId}`, req);
+  if (!res.ok) {
+    throw new Error(`fetch Error ${res.status}`);
+  }
+}
+
 export async function searchUnsplash(search: string) {
   if (!key) {
     const res = await fetch('/api/key');

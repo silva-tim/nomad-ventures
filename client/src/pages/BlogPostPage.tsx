@@ -107,7 +107,7 @@ export default function BlogPostPage() {
             </div>
           </div>
           <div className="relative flex justify-end">
-            {moreOptions && <MoreOptions />}
+            {moreOptions && <MoreOptions entry={entry} />}
           </div>
           <div className="pt-2 text-lg">
             <p className="first-letter:text-4xl first-letter:font-bold first-letter:font-serif">
