@@ -10,7 +10,7 @@ module.exports = {
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
         roboto: ['Roboto', 'sans-serif'],
-        Lato: ['Lato', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
       },
     },
   },
