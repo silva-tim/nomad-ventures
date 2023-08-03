@@ -161,7 +161,7 @@ export default function BlogPostForm({ entry }: props) {
             onClick={handleSearch}
             type="button"
             className={`bg-primary bg-opacity-90 text-white px-3 w-24 ${
-              search && `hover:text-primary hover:bg-green-400 `
+              search && `hover:bg-tertiary `
             }`}
             disabled={search ? false : true}>
             {loadingAnimation && <PiSpinnerGap className="animate-spin ml-5" />}

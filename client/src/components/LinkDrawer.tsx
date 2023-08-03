@@ -16,7 +16,7 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
             <div className="flex justify-end">
               <AiOutlineClose
                 onClick={onClick}
-                className="text-3xl cursor-pointer hover:text-gray-500"
+                className="text-3xl cursor-pointer hover:text-tertiary"
               />
             </div>
             <div className="flex flex-wrap">
@@ -24,7 +24,7 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
                 <Link to="/">
                   <span
                     onClick={onClick}
-                    className="text-2xl hover:text-gray-500">
+                    className="text-2xl hover:text-tertiary">
                     Home
                   </span>
                 </Link>
@@ -33,7 +33,7 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
                 <Link to="new-adventure">
                   <span
                     onClick={onClick}
-                    className="text-2xl hover:text-gray-500">
+                    className="text-2xl hover:text-tertiary">
                     New Post
                   </span>
                 </Link>
@@ -42,7 +42,7 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
                 <Link to="/">
                   <span
                     onClick={onClick}
-                    className="text-2xl hover:text-gray-500">
+                    className="text-2xl hover:text-tertiary">
                     My Profile
                   </span>
                 </Link>

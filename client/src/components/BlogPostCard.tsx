@@ -51,7 +51,7 @@ export default function BlogPostCard({ entry }: props) {
               </h1>
               <h2 className="text-xl font-medium">{entry.subtitle}</h2>
             </div>
-            <div className="flex bg-secondary items-center rounded-lg px-2">
+            <div className="flex bg-primary text-white items-center rounded-lg px-2">
               <FaLocationDot className="mr-1" />
               <span className="text-sm">{entry.location}</span>
             </div>

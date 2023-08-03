@@ -14,7 +14,7 @@ export default function NavBar() {
             <Link to="/">
               <span className="text-xl font-inter">NOMAD VENTURES</span>
             </Link>
-            <div className="hover:bg-black hover:bg-opacity-10 rounded-xl">
+            <div className="hover:bg-secondary rounded-xl">
               <AiOutlineMenu
                 onClick={() => setSideIsOpen(true)}
                 className="text-3xl cursor-pointer"
