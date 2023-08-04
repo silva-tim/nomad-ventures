@@ -122,6 +122,7 @@ app.put('/api/entries/:entryId', async (req, res, next) => {
   }
 });
 
+// Endpoint to delete an entry by the given entry id. Will only be available to user's own posts.
 app.delete('/api/entries/:entryId', async (req, res, next) => {
   try {
     const entryId = Number(req.params.entryId);
@@ -139,7 +140,7 @@ app.delete('/api/entries/:entryId', async (req, res, next) => {
     if (!result.rows[0]) {
       throw new ClientError(404, `Cannot find blog post ${entryId}`);
     }
-    res.status(200).json(result);
+    res.status(204).json(result);
   } catch (err) {
     next(err);
   }
