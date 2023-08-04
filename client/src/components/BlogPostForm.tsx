@@ -17,9 +17,9 @@ type props = {
 
 export default function BlogPostForm({ entry }: props) {
   const navigate = useNavigate();
-  const [title, setTitle] = useState(entry?.title);
-  const [subtitle, setSubtitle] = useState(entry?.subtitle);
-  const [location, setLocation] = useState(entry?.location);
+  const [title, setTitle] = useState(entry?.title || '');
+  const [subtitle, setSubtitle] = useState(entry?.subtitle || '');
+  const [location, setLocation] = useState(entry?.location || '');
   const [photoInfo, setPhotoInfo] = useState<Photo | undefined>(
     entry
       ? {
@@ -35,7 +35,7 @@ export default function BlogPostForm({ entry }: props) {
         }
       : undefined
   );
-  const [body, setBody] = useState(entry?.body);
+  const [body, setBody] = useState(entry?.body || '');
   const [entryId] = useState(entry?.entryId);
   const [error, setError] = useState<unknown>();
   const [search, setSearch] = useState('');
@@ -70,7 +70,7 @@ export default function BlogPostForm({ entry }: props) {
         photoAuthor: name,
         photoAuthorLink: html,
         photoAlt: alt_description,
-        entryId: entryId,
+        entryId,
       };
       if (!entryId) {
         const entryReturn = await createEntry(entryInput);

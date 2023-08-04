@@ -29,6 +29,7 @@ export async function updateEntry(entryInput: Entry) {
   if (!res.ok) {
     throw new Error(`fetch Error ${res.status}`);
   }
+  return;
 }
 
 export async function searchUnsplash(search: string) {
@@ -40,4 +41,15 @@ export async function searchUnsplash(search: string) {
     `https://api.unsplash.com/search/photos?query=${search}&orientation=landscape&per_page=12&client_id=${key}`
   );
   return await result.json();
+}
+
+export async function deleteEntry(entryId: string) {
+  const req = {
+    method: 'DELETE',
+  };
+  const res = await fetch(`/api/entries/${entryId}`, req);
+  if (!res.ok) {
+    throw new Error(`fetch Error ${res.status}`);
+  }
+  return;
 }

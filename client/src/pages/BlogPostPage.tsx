@@ -6,15 +6,19 @@ import {
 } from 'react-icons/pi';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Entry } from '../lib/types';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MoreOptions from '../components/MoreOptions';
+import DeleteModal from '../components/DeleteModal';
+import { deleteEntry } from '../lib/fetchFunctions';
 
 export default function BlogPostPage() {
+  const navigate = useNavigate();
   const { id: entryId } = useParams();
   const [error, setError] = useState<unknown>();
   const [entry, setEntry] = useState<Entry>();
   const [moreOptions, setMoreOptions] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     async function getEntry() {
@@ -32,6 +36,18 @@ export default function BlogPostPage() {
     getEntry();
   }, [entryId]);
 
+  async function handleDelete() {
+    try {
+      if (!entryId) {
+        return;
+      }
+      await deleteEntry(entryId);
+      navigate('/');
+    } catch (err) {
+      setError(err);
+    }
+  }
+
   if (error) {
     return (
       <div>
@@ -46,6 +62,12 @@ export default function BlogPostPage() {
 
   return (
     <div className="h-screen font-lato">
+      {deleteModal && (
+        <DeleteModal
+          onCancel={() => setDeleteModal(false)}
+          onDelete={() => handleDelete()}
+        />
+      )}
       <div
         className="w-full bg-center bg-cover h-1/2 flex flex-wrap content-end"
         style={{
@@ -107,7 +129,13 @@ export default function BlogPostPage() {
             </div>
           </div>
           <div className="relative flex justify-end">
-            {moreOptions && <MoreOptions entry={entry} />}
+            {moreOptions && (
+              <MoreOptions
+                onCloseOptions={() => setMoreOptions(false)}
+                entry={entry}
+                onOpenModal={() => setDeleteModal(true)}
+              />
+            )}
           </div>
           <div className="pt-2 text-lg">
             <p className="first-letter:text-4xl first-letter:font-bold first-letter:font-serif">

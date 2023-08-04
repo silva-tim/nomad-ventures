@@ -122,6 +122,30 @@ app.put('/api/entries/:entryId', async (req, res, next) => {
   }
 });
 
+// Endpoint to delete an entry by the given entry id. Will only be available to user's own posts.
+app.delete('/api/entries/:entryId', async (req, res, next) => {
+  try {
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId <= 0) {
+      throw new ClientError(400, `${entryId} does not exist`);
+    }
+    const sql = `
+      delete
+      from "entries"
+      where "entryId" = $1
+      returning *
+    `;
+    const params = [entryId];
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      throw new ClientError(404, `Cannot find blog post ${entryId}`);
+    }
+    res.status(204).json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Endpoint to get a single entry to be able to render the full page of the entry.
 app.get('/api/entries/:entryId', async (req, res, next) => {
   try {
