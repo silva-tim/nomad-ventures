@@ -122,6 +122,29 @@ app.put('/api/entries/:entryId', async (req, res, next) => {
   }
 });
 
+app.delete('/api/entries/:entryId', async (req, res, next) => {
+  try {
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId <= 0) {
+      throw new ClientError(400, `${entryId} does not exist`);
+    }
+    const sql = `
+      delete
+      from "entries"
+      where "entryId" = $1
+      returning *
+    `;
+    const params = [entryId];
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      throw new ClientError(404, `Cannot find blog post ${entryId}`);
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Endpoint to get a single entry to be able to render the full page of the entry.
 app.get('/api/entries/:entryId', async (req, res, next) => {
   try {

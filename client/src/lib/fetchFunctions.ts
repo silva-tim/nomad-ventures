@@ -29,6 +29,7 @@ export async function updateEntry(entryInput: Entry) {
   if (!res.ok) {
     throw new Error(`fetch Error ${res.status}`);
   }
+  return;
 }
 
 export async function searchUnsplash(search: string) {
@@ -41,3 +42,5 @@ export async function searchUnsplash(search: string) {
   );
   return await result.json();
 }
+
+export async function deleteEntry(entryId: number) {}
