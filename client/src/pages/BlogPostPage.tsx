@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MoreOptions from '../components/MoreOptions';
 import DeleteModal from '../components/DeleteModal';
+import { deleteEntry } from '../lib/fetchFunctions';
 
 export default function BlogPostPage() {
   const navigate = useNavigate();
@@ -37,13 +38,10 @@ export default function BlogPostPage() {
 
   async function handleDelete() {
     try {
-      const req = {
-        method: 'DELETE',
-      };
-      const res = await fetch(`/api/entries/${entryId}`, req);
-      if (!res.ok) {
-        throw new Error(`fetch Error ${res.status}`);
+      if (!entryId) {
+        return;
       }
+      await deleteEntry(entryId);
       navigate('/');
     } catch (err) {
       setError(err);

@@ -43,4 +43,13 @@ export async function searchUnsplash(search: string) {
   return await result.json();
 }
 
-export async function deleteEntry(entryId: number) {}
+export async function deleteEntry(entryId: string) {
+  const req = {
+    method: 'DELETE',
+  };
+  const res = await fetch(`/api/entries/${entryId}`, req);
+  if (!res.ok) {
+    throw new Error(`fetch Error ${res.status}`);
+  }
+  return;
+}
