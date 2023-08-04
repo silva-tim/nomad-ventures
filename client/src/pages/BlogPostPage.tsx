@@ -133,6 +133,7 @@ export default function BlogPostPage() {
           <div className="relative flex justify-end">
             {moreOptions && (
               <MoreOptions
+                onCloseOptions={() => setMoreOptions(false)}
                 entry={entry}
                 onOpenModal={() => setDeleteModal(true)}
               />
