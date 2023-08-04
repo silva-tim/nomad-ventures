@@ -4,7 +4,11 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { Entry, Photo } from '../lib/types';
 import { FormEvent, useState } from 'react';
 import UnsplashGallery from './UnsplashGallery';
-import { createEntry, searchUnsplash } from '../lib/fetchFunctions';
+import {
+  createEntry,
+  searchUnsplash,
+  updateEntry,
+} from '../lib/fetchFunctions';
 import { PiSpinnerGap } from 'react-icons/pi';
 
 type props = {
@@ -13,12 +17,13 @@ type props = {
 
 export default function BlogPostForm({ entry }: props) {
   const navigate = useNavigate();
-  const [title, setTitle] = useState(entry?.title ?? '');
-  const [subtitle, setSubtitle] = useState(entry?.subtitle ?? '');
-  const [location, setLocation] = useState(entry?.location ?? '');
-  const [photoInfo, setPhotoInfo] = useState(
+  const [title, setTitle] = useState(entry?.title);
+  const [subtitle, setSubtitle] = useState(entry?.subtitle);
+  const [location, setLocation] = useState(entry?.location);
+  const [photoInfo, setPhotoInfo] = useState<Photo | undefined>(
     entry
       ? {
+          id: 'original',
           urls: { regular: entry.photoURL },
           user: {
             name: entry.photoAuthor,
@@ -31,6 +36,7 @@ export default function BlogPostForm({ entry }: props) {
       : undefined
   );
   const [body, setBody] = useState(entry?.body);
+  const [entryId] = useState(entry?.entryId);
   const [error, setError] = useState<unknown>();
   const [search, setSearch] = useState('');
   const [photos, setPhotos] = useState<Photo[]>();
@@ -64,10 +70,15 @@ export default function BlogPostForm({ entry }: props) {
         photoAuthor: name,
         photoAuthorLink: html,
         photoAlt: alt_description,
-        entryId: undefined,
+        entryId: entryId,
       };
-      const entryReturn = await createEntry(entryInput);
-      navigate(`/post/${entryReturn[0].entryId}`);
+      if (!entryId) {
+        const entryReturn = await createEntry(entryInput);
+        navigate(`/post/${entryReturn[0].entryId}`);
+      } else {
+        await updateEntry(entryInput);
+        navigate(`/post/${entryId}`);
+      }
     } catch (err) {
       setError(err);
     }

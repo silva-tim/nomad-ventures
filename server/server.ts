@@ -5,7 +5,6 @@ import pg from 'pg';
 import { validateInput } from './lib/validations.js';
 import ClientError from './lib/client-error.js';
 
-// eslint-disable-next-line no-unused-vars -- Remove when used
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -24,6 +23,7 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
+// Endpoint to create a new entry, returns the new entry so it can swap to it.
 app.post('/api/entries', async (req, res, next) => {
   try {
     const {
@@ -68,6 +68,61 @@ app.post('/api/entries', async (req, res, next) => {
   }
 });
 
+/* Endpoint to update an existing entry, doesn't return anything because entryId already exists and
+the client already has access to it so it will just switch to the post automatically. */
+app.put('/api/entries/:entryId', async (req, res, next) => {
+  try {
+    const {
+      title,
+      subtitle,
+      location,
+      body,
+      photoURL,
+      photoAuthor,
+      photoAuthorLink,
+      photoAlt,
+    } = req.body;
+    const entryId = Number(req.params.entryId);
+    validateInput(title);
+    validateInput(subtitle);
+    validateInput(location);
+    validateInput(body);
+    validateInput(photoURL);
+    validateInput(photoAuthor);
+    validateInput(photoAuthorLink);
+    validateInput(photoAlt);
+
+    const sql = `
+      update "entries"
+        set "title" =  $1,
+            "subtitle" = $2,
+            "location" = $3,
+            "body" = $4,
+            "photoURL" = $5,
+            "photoAlt" = $6,
+            "photoAuthor" = $7,
+            "photoAuthorLink" = $8
+        where "entryId" = $9
+    `;
+    const params = [
+      title,
+      subtitle,
+      location,
+      body,
+      photoURL,
+      photoAlt,
+      photoAuthor,
+      photoAuthorLink,
+      entryId,
+    ];
+    await db.query(sql, params);
+    res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Endpoint to get a single entry to be able to render the full page of the entry.
 app.get('/api/entries/:entryId', async (req, res, next) => {
   try {
     const entryId = Number(req.params.entryId);
@@ -90,6 +145,8 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
   }
 });
 
+/* Endpoint to retrieve 15 of the most recent entries for
+rendering on the main page. (subject to change if I implement follower feed) */
 app.get('/api/entries', async (req, res, next) => {
   try {
     const sql = `
