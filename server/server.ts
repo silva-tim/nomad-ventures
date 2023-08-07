@@ -4,6 +4,18 @@ import errorMiddleware from './lib/error-middleware.js';
 import pg from 'pg';
 import { validateInput } from './lib/validations.js';
 import ClientError from './lib/client-error.js';
+// import jwt from 'jsonwebtoken';
+
+// type Auth = {
+//   username: string;
+//   password: string;
+// };
+
+// type User = {
+//   userId: number;
+//   username: string;
+//   password: string;
+// };
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -154,8 +166,9 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
       throw new ClientError(400, `${entryId} does not exist`);
     }
     const sql = `
-      select *
+      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
+        join "users" using ("userId")
         where "entryId" = $1
     `;
     const params = [entryId];
@@ -174,10 +187,9 @@ rendering on the main page. (subject to change if I implement follower feed) */
 app.get('/api/entries', async (req, res, next) => {
   try {
     const sql = `
-      select *
+      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
-        order by "date" desc
-        limit 15
+        join "users" using ("userId")
     `;
     const result = await db.query(sql);
     res.status(200).json(result.rows);
@@ -186,9 +198,71 @@ app.get('/api/entries', async (req, res, next) => {
   }
 });
 
+app.get('/api/profiles/:username', async (req, res, next) => {
+  try {
+    const username = req.params.username;
+
+    const sql1 = `
+      select "userId"
+        from "users"
+        where "username" = $1
+    `;
+    const params1 = [username];
+    const result1 = await db.query(sql1, params1);
+
+    const sql2 = `
+      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
+        from "entries"
+        join "users" using ("userId")
+        where "userId" = $1
+    `;
+    const params = [result1.rows[0].userId];
+    const result2 = await db.query(sql2, params);
+    res.status(200).json(result2.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.get('/api/key', (req, res) => {
   res.json(process.env.UNSPLASH_KEY);
 });
+
+// app.post('/api/auth/sign-in', async (req, res, next) => {
+//   try {
+//     const {username, password } = req.body as Auth;
+//     if (!username || !password) {
+//       throw new ClientError(401, 'invalid login');
+//     }
+//     const sql = `
+//       select *
+//         from "users"
+//         where "username" = $1
+//     `;
+//     const params = [username];
+//     const result = await db.query<User>(sql, params);
+//     const userInfo = result.rows[0];
+//     if (!userInfo) {
+//       throw new ClientError(401, 'invalid login');
+//     }
+//     // const isMatching = await argon2.verify(userInfo.password, password);
+//     // if (!isMatching) {
+//       // throw new ClientError(401, 'invalid login');
+//     // }
+//     const payload = {
+//       userId: userInfo.userId,
+//       username,
+//     };
+//     const secret = process.env.TOKEN_SECRET;
+//     if (!secret) {
+//       throw new Error();
+//     }
+//     const token = jwt.sign(payload, secret);
+//     res.status(200).json({ payload, token });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 /**
  * Serves React's index.html if no api route matches.
  *

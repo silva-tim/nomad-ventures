@@ -43,6 +43,9 @@ export default function BlogPostForm({ entry }: props) {
   const [missingPhoto, setMissingPhoto] = useState(entry ? false : undefined);
   const [loadingAnimation, setLoadingAnimation] = useState(false);
 
+  const [userId] = useState(entry?.userId);
+  const [username] = useState(entry?.username);
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!photoInfo) {
@@ -71,6 +74,8 @@ export default function BlogPostForm({ entry }: props) {
         photoAuthorLink: html,
         photoAlt: alt_description,
         entryId,
+        userId,
+        username,
       };
       if (!entryId) {
         const entryReturn = await createEntry(entryInput);

@@ -6,7 +6,7 @@ import {
 } from 'react-icons/pi';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Entry } from '../lib/types';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MoreOptions from '../components/MoreOptions';
 import DeleteModal from '../components/DeleteModal';
@@ -14,7 +14,7 @@ import { deleteEntry } from '../lib/fetchFunctions';
 
 export default function BlogPostPage() {
   const navigate = useNavigate();
-  const { id: entryId } = useParams();
+  const { entryId } = useParams();
   const [error, setError] = useState<unknown>();
   const [entry, setEntry] = useState<Entry>();
   const [moreOptions, setMoreOptions] = useState(false);
@@ -81,7 +81,14 @@ export default function BlogPostPage() {
             <h2 className="text-4xl pb-3">{entry.subtitle}</h2>
           </div>
           <div className="flex justify-between basis-full pb-4">
-            <span className="text-xl">{`by Tim Silva`}</span>
+            <span className="text-xl">
+              by{' '}
+              <Link
+                to={`/profiles/${entry.username}`}
+                className="underline cursor-pointer text-xl">
+                {entry.username}
+              </Link>
+            </span>
             <div className="flex">
               <FaLocationDot className="text-2xl mr-1" />
               <span className="text-xl">{entry.location}</span>

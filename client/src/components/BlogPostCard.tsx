@@ -21,7 +21,11 @@ export default function BlogPostCard({ entry }: props) {
         <div className="flex items-center">
           <span>
             Article by{' '}
-            <span className="underline cursor-pointer">Tim Silva</span>
+            <Link
+              to={`/profiles/${entry.username}`}
+              className="underline cursor-pointer">
+              {entry.username}
+            </Link>
           </span>
         </div>
         <div className="flex">
