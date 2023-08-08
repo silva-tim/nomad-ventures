@@ -198,6 +198,8 @@ app.get('/api/entries', async (req, res, next) => {
   }
 });
 
+/* Finds relevant userId from given username and then uses that id to find
+all entries that were made by that user to populate profile page */
 app.get('/api/profiles/:username', async (req, res, next) => {
   try {
     const username = req.params.username;
