@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
+import UserContext from './UserContext';
+import { UserContextValues } from '../lib/types';
+import { useContext } from 'react';
 
 type props = {
   isOpen: boolean;
@@ -7,6 +10,8 @@ type props = {
 };
 
 export default function LinkDrawer({ isOpen, onClick }: props) {
+  const context = useContext<UserContextValues>(UserContext);
+
   return (
     <>
       {isOpen && (
@@ -39,7 +44,7 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
                 </Link>
               </div>
               <div className="basis-full pt-5 ps-2">
-                <Link to="/">
+                <Link to={`/profiles/${context.user?.username}`}>
                   <span
                     onClick={onClick}
                     className="text-2xl hover:text-tertiary">

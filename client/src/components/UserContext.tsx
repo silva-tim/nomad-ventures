@@ -1,9 +1,10 @@
 import { createContext } from 'react';
-import { User } from '../lib/types';
+import { UserContextValues } from '../lib/types';
 
-const UserContext = createContext<User>({
-  username: undefined,
+const UserContext = createContext<UserContextValues>({
+  user: undefined,
   token: undefined,
-  userId: undefined,
+  handleSignIn: () => undefined,
 });
+
 export default UserContext;

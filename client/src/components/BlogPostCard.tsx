@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { FaLocationDot } from 'react-icons/fa6';
 import { PiHeartFill } from 'react-icons/pi';
 import { Link } from 'react-router-dom';
@@ -9,14 +8,8 @@ type props = {
 };
 
 export default function BlogPostCard({ entry }: props) {
-  const [underline, setUnderline] = useState(false);
-
-  function handleUnderline() {
-    setUnderline(!underline);
-  }
-
   return (
-    <div className="h-48 border-b border-black mt-3">
+    <div className="h-48 border-b border-black mt-3 group">
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center">
           <span>
@@ -34,10 +27,7 @@ export default function BlogPostCard({ entry }: props) {
         </div>
       </div>
       <Link to={`/post/${entry.entryId}`}>
-        <div
-          className="flex h-32 cursor-pointer"
-          onMouseEnter={handleUnderline}
-          onMouseLeave={handleUnderline}>
+        <div className="flex h-32 cursor-pointer">
           <div className="basis-1/3 h-full">
             <img
               className="object-cover w-full h-full"
@@ -47,10 +37,7 @@ export default function BlogPostCard({ entry }: props) {
           </div>
           <div className="py-3 px-4 font-lato flex flex-wrap">
             <div className="basis-full">
-              <h1
-                className={`${
-                  underline && `underline`
-                } text-2xl font-extrabold`}>
+              <h1 className="group-hover:underline text-2xl font-extrabold">
                 {entry.title}
               </h1>
               <h2 className="text-xl font-medium">{entry.subtitle}</h2>

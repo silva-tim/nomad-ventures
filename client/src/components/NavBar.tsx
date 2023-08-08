@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { Link, Outlet } from 'react-router-dom';
 import LinkDrawer from './LinkDrawer';
 import SignInSignUpModal from './SignInSignUpModal';
+import UserContext from './UserContext';
 
 export default function NavBar() {
   const [sideIsOpen, setSideIsOpen] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isSignIn, setIsSignIn] = useState(false);
+  const context = useContext(UserContext);
 
   return (
     <div>
@@ -18,37 +20,43 @@ export default function NavBar() {
               <span className="text-xl font-inter">NOMAD VENTURES</span>
             </Link>
             <div>
-              <button
-                type="button"
-                className="bg-green-400 rounded px-4 py-2 mx-2"
-                onClick={() => {
-                  setIsSignIn(false);
-                  setModalIsOpen(true);
-                }}>
-                Sign Up
-              </button>
-              <button
-                type="button"
-                className="bg-primary text-white rounded px-4 py-2"
-                onClick={() => {
-                  setIsSignIn(true);
-                  setModalIsOpen(true);
-                }}>
-                Sign In
-              </button>
-              {modalIsOpen && (
-                <SignInSignUpModal
-                  onClose={() => setModalIsOpen(false)}
-                  isSignIn={isSignIn}
-                  changeToSignIn={() => setIsSignIn(!isSignIn)}
-                />
+              {!context.user && (
+                <div>
+                  <button
+                    type="button"
+                    className="bg-green-400 rounded px-4 py-2 mx-2"
+                    onClick={() => {
+                      setIsSignIn(false);
+                      setModalIsOpen(true);
+                    }}>
+                    Sign Up
+                  </button>
+                  <button
+                    type="button"
+                    className="bg-primary text-white rounded px-4 py-2"
+                    onClick={() => {
+                      setIsSignIn(true);
+                      setModalIsOpen(true);
+                    }}>
+                    Sign In
+                  </button>
+                  {modalIsOpen && (
+                    <SignInSignUpModal
+                      onClose={() => setModalIsOpen(false)}
+                      isSignIn={isSignIn}
+                      changeToSignIn={() => setIsSignIn(!isSignIn)}
+                    />
+                  )}
+                </div>
               )}
-              {/* <div className="hover:bg-secondary rounded-xl">
-                <AiOutlineMenu
-                  onClick={() => setSideIsOpen(true)}
-                  className="text-3xl cursor-pointer"
-                />
-              </div> */}
+              {context.user && (
+                <div className="hover:bg-secondary rounded-xl">
+                  <AiOutlineMenu
+                    onClick={() => setSideIsOpen(true)}
+                    className="text-3xl cursor-pointer"
+                  />
+                </div>
+              )}
             </div>
           </div>
           <LinkDrawer
