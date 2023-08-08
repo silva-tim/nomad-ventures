@@ -4,6 +4,7 @@ import errorMiddleware from './lib/error-middleware.js';
 import pg from 'pg';
 import { validateInput } from './lib/validations.js';
 import ClientError from './lib/client-error.js';
+import argon2 from 'argon2';
 // import jwt from 'jsonwebtoken';
 
 // type Auth = {
@@ -11,11 +12,11 @@ import ClientError from './lib/client-error.js';
 //   password: string;
 // };
 
-// type User = {
-//   userId: number;
-//   username: string;
-//   password: string;
-// };
+type User = {
+  userId: number;
+  username: string;
+  password: string;
+};
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -165,6 +166,8 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
     if (!Number.isInteger(entryId) || entryId <= 0) {
       throw new ClientError(400, `${entryId} does not exist`);
     }
+
+    // Not using '*' so I don't return user's passwords
     const sql = `
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
@@ -186,6 +189,7 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
 rendering on the main page. (subject to change if I implement follower feed) */
 app.get('/api/entries', async (req, res, next) => {
   try {
+    // Not using '*' so I don't return user's passwords
     const sql = `
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
@@ -212,6 +216,7 @@ app.get('/api/profiles/:username', async (req, res, next) => {
     const params1 = [username];
     const result1 = await db.query(sql1, params1);
 
+    // Not using '*' so I don't return user's passwords
     const sql2 = `
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
@@ -228,6 +233,31 @@ app.get('/api/profiles/:username', async (req, res, next) => {
 
 app.get('/api/key', (req, res) => {
   res.json(process.env.UNSPLASH_KEY);
+});
+
+// Endpoint for user registration, hashes given password and stores hashed password on db. Returns new userId and username.
+app.post('/api/sign-up', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<User>;
+    if (!username || !password) {
+      throw new ClientError(400, 'username and password are required fields');
+    }
+    const hashedPassword = await argon2.hash(password);
+    const sql = `
+      insert into "users" ("username", "password")
+        values ($1, $2)
+        returning "userId",
+                  "username"
+    `;
+    const params = [username, hashedPassword];
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      throw new ClientError(500, `Something went wrong`);
+    }
+    res.sendStatus(201);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // app.post('/api/auth/sign-in', async (req, res, next) => {
