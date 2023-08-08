@@ -1,4 +1,4 @@
-// import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
 type props = {
@@ -7,7 +7,39 @@ type props = {
 };
 
 export default function SignInSignUpModal({ onClose, signInStatus }: props) {
-  // const [error, setError] = useState<unknown>();
+  const [error, setError] = useState<unknown>();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleSignUp(event: FormEvent) {
+    event.preventDefault();
+    try {
+      const user = { username, password };
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      };
+      const res = await fetch('/api/sign-up', req);
+      if (!res.ok) {
+        throw new Error(`fetch Error ${res.status}`);
+      }
+      const newUser = await res.json();
+      console.log('hi', newUser);
+    } catch (err) {
+      setError(err);
+    }
+  }
+
+  if (error) {
+    return (
+      <div>
+        {error instanceof Error ? error.message : JSON.stringify(error)}
+      </div>
+    );
+  }
 
   return (
     <div className="fixed top-0 left-0 bg-black bg-opacity-40 w-full h-full z-20">
@@ -23,10 +55,7 @@ export default function SignInSignUpModal({ onClose, signInStatus }: props) {
             {signInStatus ? 'Sign In' : 'Sign Up'}
           </span>
         </div>
-        <form
-          className="py-3"
-          // onSubmit={signInStatus ? handleSignIn : handleSignUp}
-        >
+        <form className="py-3" onSubmit={handleSignUp}>
           <div className="flex flex-wrap">
             <div className="basis-full py-4 px-6">
               <input
@@ -34,6 +63,8 @@ export default function SignInSignUpModal({ onClose, signInStatus }: props) {
                 name="username"
                 id="username"
                 placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
               />
             </div>
@@ -43,6 +74,8 @@ export default function SignInSignUpModal({ onClose, signInStatus }: props) {
                 name="password"
                 id="password"
                 placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
               />
             </div>
