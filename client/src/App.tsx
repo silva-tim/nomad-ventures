@@ -4,6 +4,7 @@ import NewPostPage from './pages/NewPostPage';
 import BlogPostPage from './pages/BlogPostPage';
 import Feed from './pages/Feed';
 import EditPostPage from './pages/EditPostPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
         <Route index element={<Feed />} />
         <Route path="new-adventure" element={<NewPostPage />} />
         <Route path="edit-adventure" element={<EditPostPage />} />
-        <Route path="post/:id" element={<BlogPostPage />} />
+        <Route path="post/:entryId" element={<BlogPostPage />} />
+        <Route path="profiles/:username" element={<ProfilePage />} />
       </Route>
     </Routes>
   );

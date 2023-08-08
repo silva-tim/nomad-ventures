@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { Link, Outlet } from 'react-router-dom';
 import LinkDrawer from './LinkDrawer';
+// import SignInSignUpModal from './SignInSignUpModal';
 
 export default function NavBar() {
   const [sideIsOpen, setSideIsOpen] = useState(false);
+  // const [signIn, setSignIn] = useState(false);
+  // const [signUp, setSignUp] = useState(false);
 
   return (
     <div>
@@ -14,6 +17,30 @@ export default function NavBar() {
             <Link to="/">
               <span className="text-xl font-inter">NOMAD VENTURES</span>
             </Link>
+            {/* <button
+              type="button"
+              className="bg-green-200"
+              onClick={() => setSignIn(true)}>
+              Sign Up
+            </button>
+            <button
+              type="button"
+              className="bg-green-200"
+              onClick={() => setSignUp(true)}>
+              Sign In
+            </button> */}
+            {/* {signIn && (
+              <SignInSignUpModal
+                onClose={() => setSignIn(false)}
+                signIn={false}
+              />
+            )}
+            {signUp && (
+              <SignInSignUpModal
+                onClose={() => setSignUp(false)}
+                signIn={true}
+              />
+            )} */}
             <div className="hover:bg-secondary rounded-xl">
               <AiOutlineMenu
                 onClick={() => setSideIsOpen(true)}

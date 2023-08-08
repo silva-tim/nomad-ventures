@@ -8,6 +8,8 @@ export type Entry = {
   photoAuthor: string;
   photoAuthorLink: string;
   entryId: number | undefined;
+  userId: number | undefined;
+  username: string | undefined;
 };
 
 export type Photo = {
@@ -20,4 +22,10 @@ export type Photo = {
     };
   };
   alt_description: string;
+};
+
+export type User = {
+  username: string | undefined;
+  token: string | undefined;
+  userId: number | undefined;
 };
