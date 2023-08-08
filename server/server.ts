@@ -141,7 +141,7 @@ app.delete('/api/entries/:entryId', async (req, res, next) => {
   try {
     const entryId = Number(req.params.entryId);
     if (!Number.isInteger(entryId) || entryId <= 0) {
-      throw new ClientError(400, `${entryId} does not exist`);
+      throw new ClientError(400, `Blog #${entryId} does not exist`);
     }
     const sql = `
       delete
@@ -152,7 +152,7 @@ app.delete('/api/entries/:entryId', async (req, res, next) => {
     const params = [entryId];
     const result = await db.query(sql, params);
     if (!result.rows[0]) {
-      throw new ClientError(404, `Cannot find blog post ${entryId}`);
+      throw new ClientError(404, `Cannot find blog #${entryId}`);
     }
     res.status(204).json(result);
   } catch (err) {
@@ -178,7 +178,7 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
     const params = [entryId];
     const result = await db.query(sql, params);
     if (!result.rows[0]) {
-      throw new ClientError(404, `Cannot find blog post ${entryId}`);
+      throw new ClientError(404, `Cannot find blog post #${entryId}`);
     }
     res.status(200).json(result.rows[0]);
   } catch (err) {

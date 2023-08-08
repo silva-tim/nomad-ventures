@@ -5,17 +5,17 @@ import {
   PiHeartLight,
 } from 'react-icons/pi';
 import { FaLocationDot } from 'react-icons/fa6';
-import { Entry, UserContextValues } from '../lib/types';
+import { Entry } from '../lib/types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import MoreOptions from '../components/MoreOptions';
 import DeleteModal from '../components/DeleteModal';
 import { deleteEntry } from '../lib/fetchFunctions';
-import UserContext from '../components/UserContext';
+import { useUser } from '../components/UserContext';
 
 export default function BlogPostPage() {
   const navigate = useNavigate();
-  const context = useContext<UserContextValues>(UserContext);
+  const { user } = useUser();
   const { entryId } = useParams();
   const [error, setError] = useState<unknown>();
   const [entry, setEntry] = useState<Entry>();
@@ -124,7 +124,7 @@ export default function BlogPostPage() {
             <PiHeartLight className="cursor-pointer hover:text-red-600" />
             <div className="flex">
               <PiBookmarksSimple className="cursor-pointer hover:text-green-400" />
-              {context.user && (
+              {user && (
                 <>
                   {moreOptions ? (
                     <PiDotsThreeCircleFill

@@ -1,6 +1,6 @@
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import UserContext from './UserContext';
+import { useUser } from './UserContext';
 
 type props = {
   onClose: () => void;
@@ -17,7 +17,7 @@ export default function SignInSignUpModal({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [successfulSignUp, setSuccessfulSignUp] = useState(false);
-  const context = useContext(UserContext);
+  const { onSignIn } = useUser();
 
   async function handleSignUp(event: FormEvent) {
     event.preventDefault();
@@ -58,7 +58,7 @@ export default function SignInSignUpModal({
         throw new Error(`fetch Error ${res.status}`);
       }
       const auth = await res.json();
-      context.handleSignIn(auth);
+      onSignIn(auth);
       setUsername('');
       setPassword('');
       onClose();

@@ -2,10 +2,10 @@ import { AiOutlineLeft } from 'react-icons/ai';
 import { FaLocationDot } from 'react-icons/fa6';
 import { PiSpinnerGap } from 'react-icons/pi';
 import { Link, useNavigate } from 'react-router-dom';
-import { FormEvent, useContext, useState } from 'react';
-import { Entry, Photo, UserContextValues } from '../lib/types';
+import { FormEvent, useState } from 'react';
+import { Entry, Photo } from '../lib/types';
 import UnsplashGallery from './UnsplashGallery';
-import UserContext from './UserContext';
+import { useUser } from './UserContext';
 import {
   createEntry,
   searchUnsplash,
@@ -18,7 +18,7 @@ type props = {
 
 export default function BlogPostForm({ entry }: props) {
   const navigate = useNavigate();
-  const context = useContext<UserContextValues>(UserContext);
+  const { user } = useUser();
   const [title, setTitle] = useState(entry?.title || '');
   const [subtitle, setSubtitle] = useState(entry?.subtitle || '');
   const [location, setLocation] = useState(entry?.location || '');
@@ -73,7 +73,7 @@ export default function BlogPostForm({ entry }: props) {
         photoAuthor: name,
         photoAuthorLink: html,
         photoAlt: alt_description,
-        userId: context.user?.userId,
+        userId: user?.userId,
         username: undefined,
       };
       if (!entryId) {

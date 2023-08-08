@@ -1,15 +1,15 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { Link, Outlet } from 'react-router-dom';
 import LinkDrawer from './LinkDrawer';
 import SignInSignUpModal from './SignInSignUpModal';
-import UserContext from './UserContext';
+import { useUser } from './UserContext';
 
 export default function NavBar() {
   const [sideIsOpen, setSideIsOpen] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isSignIn, setIsSignIn] = useState(false);
-  const context = useContext(UserContext);
+  const { user } = useUser();
 
   return (
     <div>
@@ -20,7 +20,7 @@ export default function NavBar() {
               <span className="text-xl font-inter">NOMAD VENTURES</span>
             </Link>
             <div>
-              {!context.user && (
+              {!user && (
                 <div>
                   <button
                     type="button"
@@ -49,7 +49,7 @@ export default function NavBar() {
                   )}
                 </div>
               )}
-              {context.user && (
+              {user && (
                 <div className="hover:bg-secondary rounded-xl">
                   <AiOutlineMenu
                     onClick={() => setSideIsOpen(true)}

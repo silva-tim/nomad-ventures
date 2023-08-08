@@ -33,9 +33,3 @@ export type Auth = {
   user: User;
   token: string;
 };
-
-export type UserContextValues = {
-  user: User | undefined;
-  token: string | undefined;
-  handleSignIn: (auth: Auth) => void;
-};
