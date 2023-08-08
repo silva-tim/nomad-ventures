@@ -3,13 +3,19 @@ import { AiOutlineClose } from 'react-icons/ai';
 
 type props = {
   onClose: () => void;
-  signInStatus: boolean;
+  isSignIn: boolean;
+  changeToSignIn: () => void;
 };
 
-export default function SignInSignUpModal({ onClose, signInStatus }: props) {
+export default function SignInSignUpModal({
+  onClose,
+  isSignIn,
+  changeToSignIn,
+}: props) {
   const [error, setError] = useState<unknown>();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [successfulSignUp, setSuccessfulSignUp] = useState(false);
 
   async function handleSignUp(event: FormEvent) {
     event.preventDefault();
@@ -26,8 +32,9 @@ export default function SignInSignUpModal({ onClose, signInStatus }: props) {
       if (!res.ok) {
         throw new Error(`fetch Error ${res.status}`);
       }
-      const newUser = await res.json();
-      console.log('hi', newUser);
+      setUsername('');
+      setPassword('');
+      setSuccessfulSignUp(true);
     } catch (err) {
       setError(err);
     }
@@ -43,7 +50,7 @@ export default function SignInSignUpModal({ onClose, signInStatus }: props) {
 
   return (
     <div className="fixed top-0 left-0 bg-black bg-opacity-40 w-full h-full z-20">
-      <div className="relative top-1/4 left-1/3 bg-white text-primary w-1/3 rounded">
+      <div className="relative top-1/4 left-1/3 bg-white text-primary w-1/3 h-1/2 rounded">
         <div className="flex justify-end">
           <AiOutlineClose
             onClick={onClose}
@@ -52,40 +59,58 @@ export default function SignInSignUpModal({ onClose, signInStatus }: props) {
         </div>
         <div className="text-center pt-2">
           <span className="text-2xl">
-            {signInStatus ? 'Sign In' : 'Sign Up'}
+            {isSignIn ? 'Sign In' : successfulSignUp ? 'Success!' : 'Sign Up'}
           </span>
         </div>
-        <form className="py-3" onSubmit={handleSignUp}>
-          <div className="flex flex-wrap">
-            <div className="basis-full py-4 px-6">
-              <input
-                type="text"
-                name="username"
-                id="username"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
-              />
-            </div>
-            <div className="basis-full py-4 px-6">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
-              />
-            </div>
-          </div>
+        {successfulSignUp ? (
           <div className="flex justify-around pt-7 pb-3">
-            <button type="submit" className="bg-green-400 py-3 px-7 w-96">
-              {signInStatus ? 'Sign In' : 'Sign Up'}
+            <button
+              type="button"
+              onClick={() => {
+                changeToSignIn();
+                setSuccessfulSignUp(false);
+              }}
+              className="py-3 px-7 w-96 bg-primary text-white">
+              Continue to Sign In
             </button>
           </div>
-        </form>
+        ) : (
+          <form className="py-3" onSubmit={handleSignUp}>
+            <div className="flex flex-wrap">
+              <div className="basis-full py-4 px-6">
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
+                />
+              </div>
+              <div className="basis-full py-4 px-6">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
+                />
+              </div>
+            </div>
+            <div className="flex justify-around pt-7 pb-3">
+              <button
+                type="submit"
+                className={`py-3 px-7 w-96 ${
+                  isSignIn ? 'bg-primary text-white' : 'bg-green-400'
+                } `}>
+                {isSignIn ? 'Sign In' : 'Sign Up'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

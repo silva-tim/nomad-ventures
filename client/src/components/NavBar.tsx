@@ -6,8 +6,8 @@ import SignInSignUpModal from './SignInSignUpModal';
 
 export default function NavBar() {
   const [sideIsOpen, setSideIsOpen] = useState(false);
-  const [signIn, setSignIn] = useState(false);
-  const [signUp, setSignUp] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(false);
 
   return (
     <div>
@@ -21,33 +21,34 @@ export default function NavBar() {
               <button
                 type="button"
                 className="bg-green-400 rounded px-4 py-2 mx-2"
-                onClick={() => setSignIn(true)}>
+                onClick={() => {
+                  setIsSignIn(false);
+                  setModalIsOpen(true);
+                }}>
                 Sign Up
               </button>
               <button
                 type="button"
                 className="bg-primary text-white rounded px-4 py-2"
-                onClick={() => setSignUp(true)}>
+                onClick={() => {
+                  setIsSignIn(true);
+                  setModalIsOpen(true);
+                }}>
                 Sign In
               </button>
-              {signIn && (
+              {modalIsOpen && (
                 <SignInSignUpModal
-                  onClose={() => setSignIn(false)}
-                  signInStatus={false}
+                  onClose={() => setModalIsOpen(false)}
+                  isSignIn={isSignIn}
+                  changeToSignIn={() => setIsSignIn(!isSignIn)}
                 />
               )}
-              {signUp && (
-                <SignInSignUpModal
-                  onClose={() => setSignUp(false)}
-                  signInStatus={true}
-                />
-              )}
-              <div className="hover:bg-secondary rounded-xl">
+              {/* <div className="hover:bg-secondary rounded-xl">
                 <AiOutlineMenu
                   onClick={() => setSideIsOpen(true)}
                   className="text-3xl cursor-pointer"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
           <LinkDrawer

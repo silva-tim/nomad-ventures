@@ -166,6 +166,8 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
     if (!Number.isInteger(entryId) || entryId <= 0) {
       throw new ClientError(400, `${entryId} does not exist`);
     }
+
+    // Not using '*' so I don't return user's passwords
     const sql = `
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
@@ -187,6 +189,7 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
 rendering on the main page. (subject to change if I implement follower feed) */
 app.get('/api/entries', async (req, res, next) => {
   try {
+    // Not using '*' so I don't return user's passwords
     const sql = `
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
@@ -213,6 +216,7 @@ app.get('/api/profiles/:username', async (req, res, next) => {
     const params1 = [username];
     const result1 = await db.query(sql1, params1);
 
+    // Not using '*' so I don't return user's passwords
     const sql2 = `
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
@@ -247,8 +251,10 @@ app.post('/api/sign-up', async (req, res, next) => {
     `;
     const params = [username, hashedPassword];
     const result = await db.query(sql, params);
-    const newUser = result.rows[0];
-    res.status(201).json(newUser);
+    if (!result.rows[0]) {
+      throw new ClientError(500, `Something went wrong`);
+    }
+    res.sendStatus(201);
   } catch (err) {
     next(err);
   }
