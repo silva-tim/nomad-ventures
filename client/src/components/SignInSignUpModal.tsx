@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import { useUser } from './UserContext';
 
 type props = {
   onClose: () => void;
@@ -16,17 +17,18 @@ export default function SignInSignUpModal({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [successfulSignUp, setSuccessfulSignUp] = useState(false);
+  const { onSignIn } = useUser();
 
   async function handleSignUp(event: FormEvent) {
     event.preventDefault();
     try {
-      const user = { username, password };
+      const userInfo = { username, password };
       const req = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(userInfo),
       };
       const res = await fetch('/api/sign-up', req);
       if (!res.ok) {
@@ -35,6 +37,31 @@ export default function SignInSignUpModal({
       setUsername('');
       setPassword('');
       setSuccessfulSignUp(true);
+    } catch (err) {
+      setError(err);
+    }
+  }
+
+  async function handleSignIn(event: FormEvent) {
+    event.preventDefault();
+    try {
+      const userInfo = { username, password };
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userInfo),
+      };
+      const res = await fetch('/api/sign-in', req);
+      if (!res.ok) {
+        throw new Error(`fetch Error ${res.status}`);
+      }
+      const auth = await res.json();
+      onSignIn(auth);
+      setUsername('');
+      setPassword('');
+      onClose();
     } catch (err) {
       setError(err);
     }
@@ -50,7 +77,7 @@ export default function SignInSignUpModal({
 
   return (
     <div className="fixed top-0 left-0 bg-black bg-opacity-40 w-full h-full z-20">
-      <div className="relative top-1/4 left-1/3 bg-white text-primary w-1/3 h-1/2 rounded">
+      <div className="relative top-1/4 left-1/3 bg-white text-primary w-1/3 rounded">
         <div className="flex justify-end">
           <AiOutlineClose
             onClick={onClose}
@@ -63,7 +90,7 @@ export default function SignInSignUpModal({
           </span>
         </div>
         {successfulSignUp ? (
-          <div className="flex justify-around pt-7 pb-3">
+          <div className="flex justify-around pt-7 pb-5">
             <button
               type="button"
               onClick={() => {
@@ -75,7 +102,10 @@ export default function SignInSignUpModal({
             </button>
           </div>
         ) : (
-          <form className="py-3" onSubmit={handleSignUp}>
+          <form
+            className="py-3"
+            onSubmit={isSignIn ? handleSignIn : handleSignUp}
+            autoComplete="off">
             <div className="flex flex-wrap">
               <div className="basis-full py-4 px-6">
                 <input

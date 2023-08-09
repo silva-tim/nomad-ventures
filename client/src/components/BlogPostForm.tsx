@@ -1,15 +1,16 @@
 import { AiOutlineLeft } from 'react-icons/ai';
-import { Link, useNavigate } from 'react-router-dom';
 import { FaLocationDot } from 'react-icons/fa6';
-import { Entry, Photo } from '../lib/types';
+import { PiSpinnerGap } from 'react-icons/pi';
+import { Link, useNavigate } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
+import { Entry, Photo } from '../lib/types';
 import UnsplashGallery from './UnsplashGallery';
+import { useUser } from './UserContext';
 import {
   createEntry,
   searchUnsplash,
   updateEntry,
 } from '../lib/fetchFunctions';
-import { PiSpinnerGap } from 'react-icons/pi';
 
 type props = {
   entry: Entry | undefined;
@@ -17,9 +18,17 @@ type props = {
 
 export default function BlogPostForm({ entry }: props) {
   const navigate = useNavigate();
+  const { user, token } = useUser();
   const [title, setTitle] = useState(entry?.title || '');
   const [subtitle, setSubtitle] = useState(entry?.subtitle || '');
   const [location, setLocation] = useState(entry?.location || '');
+  const [body, setBody] = useState(entry?.body || '');
+  const [entryId] = useState(entry?.entryId);
+  const [search, setSearch] = useState('');
+  const [photos, setPhotos] = useState<Photo[]>();
+  const [missingPhoto, setMissingPhoto] = useState(entry ? false : undefined);
+  const [loadingAnimation, setLoadingAnimation] = useState(false);
+  const [error, setError] = useState<unknown>();
   const [photoInfo, setPhotoInfo] = useState<Photo | undefined>(
     entry
       ? {
@@ -35,16 +44,6 @@ export default function BlogPostForm({ entry }: props) {
         }
       : undefined
   );
-  const [body, setBody] = useState(entry?.body || '');
-  const [entryId] = useState(entry?.entryId);
-  const [error, setError] = useState<unknown>();
-  const [search, setSearch] = useState('');
-  const [photos, setPhotos] = useState<Photo[]>();
-  const [missingPhoto, setMissingPhoto] = useState(entry ? false : undefined);
-  const [loadingAnimation, setLoadingAnimation] = useState(false);
-
-  const [userId] = useState(entry?.userId);
-  const [username] = useState(entry?.username);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -69,19 +68,20 @@ export default function BlogPostForm({ entry }: props) {
         subtitle,
         location,
         body,
+        entryId,
         photoURL: regular,
         photoAuthor: name,
         photoAuthorLink: html,
         photoAlt: alt_description,
-        entryId,
-        userId,
-        username,
+        userId: entry?.userId,
+        username: undefined,
       };
       if (!entryId) {
-        const entryReturn = await createEntry(entryInput);
+        entryInput.userId = user?.userId;
+        const entryReturn = await createEntry(entryInput, token);
         navigate(`/post/${entryReturn[0].entryId}`);
       } else {
-        await updateEntry(entryInput);
+        await updateEntry(entryInput, token);
         navigate(`/post/${entryId}`);
       }
     } catch (err) {
@@ -100,7 +100,6 @@ export default function BlogPostForm({ entry }: props) {
       setPhotos(resultJSON.results);
       setSearch('');
       setLoadingAnimation(false);
-      setMissingPhoto(false);
     } catch (err) {
       setError(err);
     }
@@ -121,7 +120,7 @@ export default function BlogPostForm({ entry }: props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} autoComplete="off">
       <div className="flex pt-4 justify-between">
         <Link to="/">
           <div className="flex">
@@ -129,6 +128,7 @@ export default function BlogPostForm({ entry }: props) {
             <span className="hover:underline">cancel</span>
           </div>
         </Link>
+        {missingPhoto && <span>Please add a photo.</span>}
         <div>
           <button type="submit" className="bg-green-400 px-7 rounded-3xl">
             {entry ? 'Update' : 'Publish'}
@@ -137,7 +137,6 @@ export default function BlogPostForm({ entry }: props) {
       </div>
       {photoInfo && (
         <div className="h-max-content flex justify-center mt-4">
-          {missingPhoto && <span>Please add a photo.</span>}
           <img
             className="object-cover h-96"
             src={photoInfo?.urls.regular}

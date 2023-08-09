@@ -26,6 +26,10 @@ export type Photo = {
 
 export type User = {
   username: string | undefined;
-  token: string | undefined;
   userId: number | undefined;
+};
+
+export type Auth = {
+  user: User;
+  token: string;
 };

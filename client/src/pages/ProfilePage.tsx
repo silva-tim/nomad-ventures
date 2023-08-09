@@ -39,11 +39,17 @@ export default function ProfilePage() {
       <div className="max-w-screen-lg m-auto border-b border-black h-36 flex justify-center items-center">
         <span className="text-3xl">{username}</span>
       </div>
-      <div className="max-w-screen-md m-auto pt-3">
-        {entries.map((index) => (
-          <BlogPostCard key={index.entryId} entry={index} />
-        ))}
-      </div>
+      {entries[0] ? (
+        <div className="max-w-screen-md m-auto pt-3">
+          {entries.map((index) => (
+            <BlogPostCard key={index.entryId} entry={index} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex justify-center pt-3">
+          <span>{username} hasn't posted anything yet!</span>
+        </div>
+      )}
     </>
   );
 }

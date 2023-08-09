@@ -11,9 +11,11 @@ import { useEffect, useState } from 'react';
 import MoreOptions from '../components/MoreOptions';
 import DeleteModal from '../components/DeleteModal';
 import { deleteEntry } from '../lib/fetchFunctions';
+import { useUser } from '../components/UserContext';
 
 export default function BlogPostPage() {
   const navigate = useNavigate();
+  const { user, token } = useUser();
   const { entryId } = useParams();
   const [error, setError] = useState<unknown>();
   const [entry, setEntry] = useState<Entry>();
@@ -38,10 +40,10 @@ export default function BlogPostPage() {
 
   async function handleDelete() {
     try {
-      if (!entryId) {
+      if (!entry) {
         return;
       }
-      await deleteEntry(entryId);
+      await deleteEntry(entry, token);
       navigate('/');
     } catch (err) {
       setError(err);
@@ -122,16 +124,20 @@ export default function BlogPostPage() {
             <PiHeartLight className="cursor-pointer hover:text-red-600" />
             <div className="flex">
               <PiBookmarksSimple className="cursor-pointer hover:text-green-400" />
-              {moreOptions ? (
-                <PiDotsThreeCircleFill
-                  onClick={() => setMoreOptions(!moreOptions)}
-                  className="cursor-pointer"
-                />
-              ) : (
-                <PiDotsThreeCircleLight
-                  onClick={() => setMoreOptions(!moreOptions)}
-                  className="cursor-pointer"
-                />
+              {user?.userId === entry.userId && (
+                <>
+                  {moreOptions ? (
+                    <PiDotsThreeCircleFill
+                      onClick={() => setMoreOptions(!moreOptions)}
+                      className="cursor-pointer"
+                    />
+                  ) : (
+                    <PiDotsThreeCircleLight
+                      onClick={() => setMoreOptions(!moreOptions)}
+                      className="cursor-pointer"
+                    />
+                  )}
+                </>
               )}
             </div>
           </div>
