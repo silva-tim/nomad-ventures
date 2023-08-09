@@ -15,7 +15,7 @@ import { useUser } from '../components/UserContext';
 
 export default function BlogPostPage() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, token } = useUser();
   const { entryId } = useParams();
   const [error, setError] = useState<unknown>();
   const [entry, setEntry] = useState<Entry>();
@@ -40,10 +40,10 @@ export default function BlogPostPage() {
 
   async function handleDelete() {
     try {
-      if (!entryId) {
+      if (!entry) {
         return;
       }
-      await deleteEntry(entryId);
+      await deleteEntry(entry, token);
       navigate('/');
     } catch (err) {
       setError(err);
@@ -124,7 +124,7 @@ export default function BlogPostPage() {
             <PiHeartLight className="cursor-pointer hover:text-red-600" />
             <div className="flex">
               <PiBookmarksSimple className="cursor-pointer hover:text-green-400" />
-              {user && (
+              {user?.userId === entry.userId && (
                 <>
                   {moreOptions ? (
                     <PiDotsThreeCircleFill

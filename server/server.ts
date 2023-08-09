@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import errorMiddleware from './lib/error-middleware.js';
+import { authMiddleware } from './lib/authorization-middleware.js';
 import pg from 'pg';
 import { validateInput } from './lib/validations.js';
 import ClientError from './lib/client-error.js';
@@ -37,7 +38,8 @@ app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
 // Endpoint to create a new entry, returns the new entry so it can swap to it.
-app.post('/api/entries', async (req, res, next) => {
+// Needs to check if user is signed in.
+app.post('/api/entries', authMiddleware, async (req, res, next) => {
   try {
     const {
       title,
@@ -83,8 +85,9 @@ app.post('/api/entries', async (req, res, next) => {
 });
 
 /* Endpoint to update an existing entry, doesn't return anything because entryId already exists and
-the client already has access to it so it will just switch to the post automatically. */
-app.put('/api/entries/:entryId', async (req, res, next) => {
+the client already has access to it so it will just switch to the post automatically. Needs to check
+if user is signed in and if entry belongs to them. */
+app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
   try {
     const {
       title,
@@ -95,7 +98,11 @@ app.put('/api/entries/:entryId', async (req, res, next) => {
       photoAuthor,
       photoAuthorLink,
       photoAlt,
+      userId,
     } = req.body;
+    if (userId !== req.body.user.userId) {
+      throw new ClientError(401, 'wrong authentication');
+    }
     const entryId = Number(req.params.entryId);
     validateInput(title);
     validateInput(subtitle);
@@ -136,10 +143,15 @@ app.put('/api/entries/:entryId', async (req, res, next) => {
   }
 });
 
-// Endpoint to delete an entry by the given entry id. Will only be available to user's own posts.
-app.delete('/api/entries/:entryId', async (req, res, next) => {
+// Endpoint to delete an entry by the given entry id.
+// Needs to check if user is signed in and if entry is their entry.
+app.delete('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
   try {
     const entryId = Number(req.params.entryId);
+    const userId = req.body.userId;
+    if (userId !== req.body.user.userId) {
+      throw new ClientError(401, 'wrong authentication');
+    }
     if (!Number.isInteger(entryId) || entryId <= 0) {
       throw new ClientError(400, `Blog #${entryId} does not exist`);
     }
