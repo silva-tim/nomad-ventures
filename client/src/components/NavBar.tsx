@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import LinkDrawer from './LinkDrawer';
 import SignInSignUpModal from './SignInSignUpModal';
 import { useUser } from './UserContext';
@@ -10,14 +10,21 @@ export default function NavBar() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isSignIn, setIsSignIn] = useState(false);
   const { user } = useUser();
+  const location = useLocation();
 
   return (
     <div>
-      <header className="sticky top-0 p-4 border-white border-b w-full z-10">
+      <header
+        className={`sticky top-0 p-4 border-b w-full z-10 ${
+          location.pathname !== '/' ? 'border-black' : 'border-white'
+        }`}>
         <nav>
           <div className="flex items-center justify-between">
             <Link to="/">
-              <span className="text-xl text-white font-inter">
+              <span
+                className={`text-xl font-inter ${
+                  location.pathname !== '/' ? 'text-black' : 'text-white'
+                }`}>
                 NOMAD VENTURES
               </span>
             </Link>

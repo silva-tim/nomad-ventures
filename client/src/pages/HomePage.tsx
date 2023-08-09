@@ -1,9 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SignInSignUpModal from '../components/SignInSignUpModal';
+import { useUser } from '../components/UserContext';
 
 export default function HomePage() {
   const [isModal, setIsModal] = useState(false);
   const [isSignIn, setIsSignIn] = useState(false);
+  const { user } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/feed');
+    }
+  });
 
   return (
     <div className="w-full bg-center bg-cover h-screen flex-wrap flex justify-center items-center absolute top-0 bg-[url('https://images.unsplash.com/photo-1689631857988-a46ee3adf86b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1856&q=80')]">
@@ -16,8 +26,7 @@ export default function HomePage() {
       )}
       <div className="flex flex-wrap">
         <h1 className="text-4xl text-white font-lato font-bold tracking-widest basis-full text-center p-0 mb-5">
-          WHAT'S YOUR{' '}
-          <span className="text-green-400 drop-shadow-xl">ADVENTURE</span>?
+          WHAT'S YOUR ADVENTURE?
         </h1>
         <div className="basis-full text-center">
           <button
