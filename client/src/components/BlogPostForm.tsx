@@ -100,7 +100,6 @@ export default function BlogPostForm({ entry }: props) {
       setPhotos(resultJSON.results);
       setSearch('');
       setLoadingAnimation(false);
-      setMissingPhoto(false);
     } catch (err) {
       setError(err);
     }
@@ -121,7 +120,7 @@ export default function BlogPostForm({ entry }: props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} autoComplete="off">
       <div className="flex pt-4 justify-between">
         <Link to="/">
           <div className="flex">
@@ -129,6 +128,7 @@ export default function BlogPostForm({ entry }: props) {
             <span className="hover:underline">cancel</span>
           </div>
         </Link>
+        {missingPhoto && <span>Please add a photo.</span>}
         <div>
           <button type="submit" className="bg-green-400 px-7 rounded-3xl">
             {entry ? 'Update' : 'Publish'}
@@ -137,7 +137,6 @@ export default function BlogPostForm({ entry }: props) {
       </div>
       {photoInfo && (
         <div className="h-max-content flex justify-center mt-4">
-          {missingPhoto && <span>Please add a photo.</span>}
           <img
             className="object-cover h-96"
             src={photoInfo?.urls.regular}

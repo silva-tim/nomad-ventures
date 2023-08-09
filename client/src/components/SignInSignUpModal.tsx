@@ -104,7 +104,8 @@ export default function SignInSignUpModal({
         ) : (
           <form
             className="py-3"
-            onSubmit={isSignIn ? handleSignIn : handleSignUp}>
+            onSubmit={isSignIn ? handleSignIn : handleSignUp}
+            autoComplete="off">
             <div className="flex flex-wrap">
               <div className="basis-full py-4 px-6">
                 <input
