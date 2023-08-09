@@ -1,4 +1,5 @@
 import {
+  PiBookmarksSimpleFill,
   PiBookmarksSimple,
   PiDotsThreeCircleFill,
   PiDotsThreeCircleLight,
@@ -21,6 +22,7 @@ export default function BlogPostPage() {
   const [entry, setEntry] = useState<Entry>();
   const [moreOptions, setMoreOptions] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     async function getEntry() {
@@ -35,8 +37,32 @@ export default function BlogPostPage() {
         setError(err);
       }
     }
+
+    async function checkSaved() {
+      try {
+        const req = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const res = await fetch(`/api/saved/${entryId}`, req);
+        if (res.status !== 200) {
+          setSaved(false);
+        }
+        setSaved(true);
+      } catch (err) {
+        setError(err);
+      }
+    }
+
     getEntry();
-  }, [entryId]);
+
+    if (user) {
+      checkSaved();
+    }
+  }, [entryId, user, token]);
 
   async function handleDelete() {
     try {
@@ -48,6 +74,26 @@ export default function BlogPostPage() {
     } catch (err) {
       setError(err);
     }
+  }
+
+  async function handleSave() {
+    try {
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      if (saved) {
+        req.method = 'DELETE';
+      }
+      const res = await fetch(`/api/save/${entryId}`, req);
+      if (!res.ok) {
+        throw new Error(`fetch Error ${res.status}`);
+      }
+      setSaved(!saved);
+    } catch (err) {}
   }
 
   if (error) {
@@ -123,7 +169,17 @@ export default function BlogPostPage() {
           <div className="border-y border-primary py-2 text-3xl flex justify-between">
             <PiHeartLight className="cursor-pointer hover:text-red-600" />
             <div className="flex">
-              <PiBookmarksSimple className="cursor-pointer hover:text-green-400" />
+              {saved ? (
+                <PiBookmarksSimpleFill
+                  onClick={handleSave}
+                  className="cursor-pointer"
+                />
+              ) : (
+                <PiBookmarksSimple
+                  onClick={handleSave}
+                  className="cursor-pointer hover:text-green-400"
+                />
+              )}
               {user?.userId === entry.userId && (
                 <>
                   {moreOptions ? (

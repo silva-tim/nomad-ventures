@@ -309,6 +309,67 @@ app.post('/api/sign-in', async (req, res, next) => {
     next(err);
   }
 });
+
+app.post('/api/save/:entryId', authMiddleware, async (req, res, next) => {
+  try {
+    const userId = req.body.user.userId;
+    const entryId = Number(req.params.entryId);
+    const sql = `
+      insert into "savedEntries" ("userId", "entryId")
+        values ($1, $2)
+        returning *
+    `;
+    const params = [userId, entryId];
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      throw new ClientError(500, `Something went wrong`);
+    }
+    res.sendStatus(201);
+  } catch (err) {
+    next();
+  }
+});
+
+app.delete('/api/save/:entryId', authMiddleware, async (req, res, next) => {
+  try {
+    const userId = req.body.user.userId;
+    const entryId = Number(req.params.entryId);
+    const sql = `
+      delete
+        from "savedEntries"
+        where "userId" = $1 and "entryId" = $2
+        returning *
+    `;
+    const params = [userId, entryId];
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      throw new ClientError(500, `Something went wrong`);
+    }
+    res.sendStatus(204);
+  } catch (err) {
+    next();
+  }
+});
+
+app.get('/api/saved/:entryId', authMiddleware, async (req, res, next) => {
+  try {
+    const userId = req.body.user.userId;
+    const entryId = Number(req.params.entryId);
+    const sql = `
+      select *
+        from "savedEntries"
+        where "userId" = $1 and "entryId" = $2
+    `;
+    const params = [userId, entryId];
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      res.sendStatus(204);
+    }
+    res.sendStatus(200);
+  } catch (err) {
+    next();
+  }
+});
 /**
  * Serves React's index.html if no api route matches.
  *

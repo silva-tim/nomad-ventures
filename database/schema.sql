@@ -36,7 +36,7 @@ CREATE TABLE "public"."entries" (
 
 
 
-CREATE TABLE "public"."saved_entries" (
+CREATE TABLE "public"."savedEntries" (
 	"saveId" serial NOT NULL UNIQUE,
 	"userId" integer NOT NULL,
 	"entryId" integer NOT NULL,
@@ -72,8 +72,8 @@ CREATE TABLE "public"."likes" (
 
 ALTER TABLE "entries" ADD CONSTRAINT "entries_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 
-ALTER TABLE "saved_entries" ADD CONSTRAINT "saved_entries_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
-ALTER TABLE "saved_entries" ADD CONSTRAINT "saved_entries_fk1" FOREIGN KEY ("entryId") REFERENCES "entries"("entryId");
+ALTER TABLE "savedEntries" ADD CONSTRAINT "savedEntries_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
+ALTER TABLE "savedEntries" ADD CONSTRAINT "savedEntries_fk1" FOREIGN KEY ("entryId") REFERENCES "entries"("entryId");
 
 ALTER TABLE "follows" ADD CONSTRAINT "follows_fk0" FOREIGN KEY ("followerId") REFERENCES "users"("userId");
 ALTER TABLE "follows" ADD CONSTRAINT "follows_fk1" FOREIGN KEY ("followedId") REFERENCES "users"("userId");
