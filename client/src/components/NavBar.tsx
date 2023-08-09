@@ -13,11 +13,13 @@ export default function NavBar() {
 
   return (
     <div>
-      <header className="sticky top-0 p-4 border-black bg-white border-b w-full z-10">
+      <header className="sticky top-0 p-4 border-white border-b w-full z-10">
         <nav>
           <div className="flex items-center justify-between">
             <Link to="/">
-              <span className="text-xl font-inter">NOMAD VENTURES</span>
+              <span className="text-xl text-white font-inter">
+                NOMAD VENTURES
+              </span>
             </Link>
             <div>
               {!user && (

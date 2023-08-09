@@ -6,13 +6,15 @@ import Feed from './pages/Feed';
 import EditPostPage from './pages/EditPostPage';
 import ProfilePage from './pages/ProfilePage';
 import UserContextProvider from './components/UserContext';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <UserContextProvider>
       <Routes>
         <Route path="/" element={<NavBar />}>
-          <Route index element={<Feed />} />
+          <Route index element={<HomePage />} />
+          <Route path="feed" element={<Feed />} />
           <Route path="new-adventure" element={<NewPostPage />} />
           <Route path="edit-adventure" element={<EditPostPage />} />
           <Route path="post/:entryId" element={<BlogPostPage />} />
