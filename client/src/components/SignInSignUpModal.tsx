@@ -112,6 +112,8 @@ export default function SignInSignUpModal({
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
+                  autoFocus
+                  required
                 />
               </div>
               <div className="basis-full py-4 px-6">
@@ -123,6 +125,7 @@ export default function SignInSignUpModal({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
+                  required
                 />
               </div>
             </div>
