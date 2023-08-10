@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SignInSignUpModal from '../components/SignInSignUpModal';
 import { useUser } from '../components/UserContext';
 
@@ -36,7 +36,30 @@ export default function HomePage() {
             Get Started
           </button>
         </div>
+        <div className="basis-full text-center">
+          <Link to={'/feed'} className="text-white underline">
+            Explore
+          </Link>
+        </div>
       </div>
+      <span className="text-white text-sm absolute bottom-3 left-8">
+        Photo by{' '}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+          href="https://unsplash.com/@sirsimo?utm_source=nomad-ventures&utm_medium=referral">
+          Sir. Simo
+        </a>{' '}
+        on{' '}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+          href="https://unsplash.com/?utm_source=nomad-ventures&utm_medium=referral">
+          Unsplash
+        </a>
+      </span>
     </div>
   );
 }

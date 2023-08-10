@@ -11,12 +11,14 @@ export type UserContextValues = {
   user: User | undefined;
   token: string | undefined;
   onSignIn: (auth: Auth) => void;
+  onSignOut: () => void;
 };
 
 const UserContext = createContext<UserContextValues>({
   user: undefined,
   token: undefined,
   onSignIn: () => undefined,
+  onSignOut: () => undefined,
 });
 
 type props = {
@@ -40,13 +42,19 @@ export default function UserContextProvider({ children }: props) {
   }, []);
 
   function onSignIn(auth: Auth) {
-    sessionStorage.setItem('tokenKey', JSON.stringify(auth));
+    localStorage.setItem('tokenKey', JSON.stringify(auth));
     setUser(auth.user);
     setToken(auth.token);
   }
 
+  function onSignOut() {
+    localStorage.removeItem('tokenKey');
+    setUser(undefined);
+    setToken(undefined);
+  }
+
   return (
-    <UserContext.Provider value={{ user, token, onSignIn }}>
+    <UserContext.Provider value={{ user, token, onSignIn, onSignOut }}>
       {children}
     </UserContext.Provider>
   );

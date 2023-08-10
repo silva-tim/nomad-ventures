@@ -68,11 +68,7 @@ export default function SignInSignUpModal({
   }
 
   if (error) {
-    return (
-      <div>
-        {error instanceof Error ? error.message : JSON.stringify(error)}
-      </div>
-    );
+    onClose();
   }
 
   return (

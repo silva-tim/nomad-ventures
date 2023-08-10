@@ -71,7 +71,7 @@ export default function BlogPostPage() {
         />
       )}
       <div
-        className="w-full bg-center bg-cover h-1/2 flex flex-wrap content-end"
+        className="w-full bg-center bg-cover h-2/3 flex flex-wrap content-end"
         style={{
           backgroundImage: `url(${entry.photoURL})`,
         }}>

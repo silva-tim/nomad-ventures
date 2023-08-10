@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useUser } from './UserContext';
 
@@ -8,7 +8,14 @@ type props = {
 };
 
 export default function LinkDrawer({ isOpen, onClick }: props) {
-  const { user } = useUser();
+  const { user, onSignOut } = useUser();
+  const navigate = useNavigate();
+
+  function handleSignOut() {
+    onSignOut();
+    onClick();
+    navigate('/');
+  }
 
   return (
     <>
@@ -46,9 +53,16 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
                   <span
                     onClick={onClick}
                     className="text-2xl hover:text-tertiary">
-                    My Profile
+                    My Profile ({user?.username})
                   </span>
                 </Link>
+              </div>
+              <div className="basis-full pt-5 ps-2">
+                <span
+                  onClick={handleSignOut}
+                  className="text-2xl hover:text-tertiary cursor-pointer">
+                  Sign Out
+                </span>
               </div>
             </div>
           </div>

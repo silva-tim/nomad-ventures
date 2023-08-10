@@ -16,7 +16,7 @@ export default function NavBar() {
     <div>
       <header
         className={`sticky top-0 p-4 border-b w-full z-10 ${
-          location.pathname !== '/' ? 'border-black' : 'border-white'
+          location.pathname !== '/' ? 'border-black bg-white' : 'border-white'
         }`}>
         <nav>
           <div className="flex items-center justify-between">
