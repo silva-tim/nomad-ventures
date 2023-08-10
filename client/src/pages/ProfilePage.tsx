@@ -35,8 +35,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <>
-      <div className="max-w-screen-lg m-auto border-b border-black h-36 flex justify-center items-center">
+    <div className="max-w-screen-md w-11/12 m-auto">
+      <div className="max-w-screen-lg m-auto border-b border-black h-24 md:h-36 flex justify-center items-center">
         <span className="text-3xl">{username}</span>
       </div>
       {entries[0] ? (
@@ -50,6 +50,6 @@ export default function ProfilePage() {
           <span>{username} hasn't posted anything yet!</span>
         </div>
       )}
-    </>
+    </div>
   );
 }

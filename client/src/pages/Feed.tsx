@@ -32,10 +32,15 @@ export default function Feed() {
   }
 
   return (
-    <div className="max-w-screen-md m-auto">
-      {entries.map((index) => (
-        <BlogPostCard key={index.entryId} entry={index} />
-      ))}
-    </div>
+    <>
+      <div className="max-w-screen-md w-11/12 m-auto">
+        <div className="w-full p-2 text-center text-white bg-primary">
+          <span className="text-xl">Newest Adventures</span>
+        </div>
+        {entries.map((index) => (
+          <BlogPostCard key={index.entryId} entry={index} />
+        ))}
+      </div>
+    </>
   );
 }

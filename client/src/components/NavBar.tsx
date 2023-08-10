@@ -22,7 +22,7 @@ export default function NavBar() {
           <div className="flex items-center justify-between">
             <Link to="/">
               <span
-                className={`text-xl font-inter ${
+                className={`md:text-xl font-inter ${
                   location.pathname !== '/' ? 'text-black' : 'text-white'
                 }`}>
                 NOMAD VENTURES
@@ -33,7 +33,7 @@ export default function NavBar() {
                 <div>
                   <button
                     type="button"
-                    className="bg-green-400 rounded px-4 py-2 mx-2"
+                    className="bg-custGreen rounded px-1 text-sm md:text-md md:px-4 md:py-2 mx-2"
                     onClick={() => {
                       setIsSignIn(false);
                       setModalIsOpen(true);
@@ -42,7 +42,7 @@ export default function NavBar() {
                   </button>
                   <button
                     type="button"
-                    className="bg-primary text-white rounded px-4 py-2"
+                    className="bg-primary text-white rounded px-1 text-sm md:text-md md:px-4 md:py-2"
                     onClick={() => {
                       setIsSignIn(true);
                       setModalIsOpen(true);
