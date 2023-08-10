@@ -25,7 +25,7 @@ export default function HomePage() {
         />
       )}
       <div className="flex flex-wrap">
-        <h1 className="text-4xl text-white font-lato font-bold tracking-widest basis-full text-center p-0 mb-5">
+        <h1 className="text-3xl md:text-4xl text-white font-lato font-bold tracking-widest basis-full text-center p-0 mb-5">
           WHAT'S YOUR ADVENTURE?
         </h1>
         <div className="basis-full text-center">
@@ -42,7 +42,7 @@ export default function HomePage() {
           </Link>
         </div>
       </div>
-      <span className="text-white text-sm absolute bottom-3 left-8">
+      <span className="text-white text-sm absolute bottom-3 left-3 md:left-8">
         Photo by{' '}
         <a
           target="_blank"

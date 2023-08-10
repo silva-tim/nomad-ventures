@@ -10,6 +10,7 @@ export type Entry = {
   entryId: number | undefined;
   userId: number | undefined;
   username: string | undefined;
+  date: string;
 };
 
 export type Photo = {

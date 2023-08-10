@@ -73,7 +73,7 @@ export default function SignInSignUpModal({
 
   return (
     <div className="fixed top-0 left-0 bg-black bg-opacity-40 w-full h-full z-20">
-      <div className="relative top-1/4 left-1/3 bg-white text-primary w-1/3 rounded">
+      <div className="relative top-1/4 m-auto bg-white text-primary md:w-5/12 rounded">
         <div className="flex justify-end">
           <AiOutlineClose
             onClick={onClose}
@@ -93,7 +93,7 @@ export default function SignInSignUpModal({
                 changeToSignIn();
                 setSuccessfulSignUp(false);
               }}
-              className="py-3 px-7 w-96 bg-primary text-white">
+              className="py-3 px-7 w-1/2 min-w-max bg-primary text-white">
               Continue to Sign In
             </button>
           </div>
@@ -132,8 +132,8 @@ export default function SignInSignUpModal({
             <div className="flex justify-around pt-7 pb-3">
               <button
                 type="submit"
-                className={`py-3 px-7 w-96 ${
-                  isSignIn ? 'bg-primary text-white' : 'bg-green-400'
+                className={`py-3 px-7 w-1/2 ${
+                  isSignIn ? 'bg-primary text-white' : 'bg-custGreen'
                 } `}>
                 {isSignIn ? 'Sign In' : 'Sign Up'}
               </button>

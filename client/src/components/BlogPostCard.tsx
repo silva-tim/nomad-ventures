@@ -8,42 +8,50 @@ type props = {
 };
 
 export default function BlogPostCard({ entry }: props) {
+  const date = new Date(entry.date);
+
   return (
-    <div className="h-48 border-b border-black mt-3 group">
+    <div className="h-60 md:h-48 border-b border-black mt-3 group">
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center">
-          <span>
+          <span className="text-sm md:text-md">
             Article by{' '}
             <Link
               to={`/profiles/${entry.username}`}
               className="underline cursor-pointer">
               {entry.username}
-            </Link>
+            </Link>{' '}
+            •{' '}
+            <span className="text-xs text-gray-500">
+              {date.toDateString().slice(3)}
+            </span>
           </span>
         </div>
         <div className="flex">
-          <PiHeartFill className="text-2xl mr-1 text-red-600" />
-          <span>232</span>
+          <PiHeartFill className="text-lg md:text-2xl mr-1 text-red-600" />
+          <span className="text-sm">232</span>
         </div>
       </div>
       <Link to={`/post/${entry.entryId}`}>
-        <div className="flex h-32 cursor-pointer">
-          <div className="basis-1/3 h-full">
+        <div className="flex flex-wrap h-32 cursor-pointer">
+          <div className="basis-full md:basis-1/3 h-full">
             <img
               className="object-cover w-full h-full"
               src={entry.photoURL}
               alt={entry.photoAlt}
             />
           </div>
-          <div className="py-3 px-4 font-lato flex flex-wrap">
+          <div className="px-1 md:py-3 md:px-4 font-lato flex flex-wrap md:basis-2/3">
             <div className="basis-full">
-              <h1 className="group-hover:underline text-2xl font-extrabold">
+              <h1 className="md:group-hover:underline md:text-2xl font-extrabold">
                 {entry.title}
               </h1>
-              <h2 className="text-xl font-medium">{entry.subtitle}</h2>
+              <h2 className="text-sm md:text-xl font-medium">
+                {entry.subtitle}
+              </h2>
             </div>
             <div className="flex bg-primary text-white items-center rounded-lg px-2">
-              <FaLocationDot className="mr-1" />
+              <FaLocationDot className="text-sm md:text-md mr-1" />
               <span className="text-sm">{entry.location}</span>
             </div>
           </div>

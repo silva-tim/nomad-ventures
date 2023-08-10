@@ -1,7 +1,9 @@
 import {
   PiBookmarksSimple,
+  PiBookmarksSimpleFill,
   PiDotsThreeCircleFill,
   PiDotsThreeCircleLight,
+  PiHeartFill,
   PiHeartLight,
 } from 'react-icons/pi';
 import { FaLocationDot } from 'react-icons/fa6';
@@ -21,6 +23,8 @@ export default function BlogPostPage() {
   const [entry, setEntry] = useState<Entry>();
   const [moreOptions, setMoreOptions] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     async function getEntry() {
@@ -71,34 +75,34 @@ export default function BlogPostPage() {
         />
       )}
       <div
-        className="w-full bg-center bg-cover h-2/3 flex flex-wrap content-end"
+        className="w-full bg-center bg-cover h-1/2 md:h-2/3 flex flex-wrap content-end"
         style={{
           backgroundImage: `url(${entry.photoURL})`,
         }}>
-        <div className="max-w-screen-lg w-full m-auto text-left text-white text-shadow font-bold">
+        <div className="max-w-screen-lg w-11/12 m-auto text-left text-white text-shadow font-bold">
           <div className="basis-full">
-            <h1 className="text-5xl pb-4">{entry.title}</h1>
+            <h1 className="text-2xl md:text-5xl pb-4">{entry.title}</h1>
           </div>
           <div className="basis-full">
-            <h2 className="text-4xl pb-3">{entry.subtitle}</h2>
+            <h2 className="text-xl md:text-4xl pb-3">{entry.subtitle}</h2>
           </div>
           <div className="flex justify-between basis-full pb-4">
-            <span className="text-xl">
+            <span className="text-sm md:text-xl">
               by{' '}
               <Link
                 to={`/profiles/${entry.username}`}
-                className="underline cursor-pointer text-xl">
+                className="underline cursor-pointer">
                 {entry.username}
               </Link>
             </span>
             <div className="flex">
-              <FaLocationDot className="text-2xl mr-1" />
-              <span className="text-xl">{entry.location}</span>
+              <FaLocationDot className="text-md md:text-2xl mr-1" />
+              <span className="text-sm md:text-xl">{entry.location}</span>
             </div>
           </div>
         </div>
       </div>
-      <div className="max-w-screen-lg w-full m-auto pt-1">
+      <div className="max-w-screen-lg w-11/12 m-auto pt-1">
         <div className="text-center text-sm">
           <span>
             Photo by{' '}
@@ -121,9 +125,29 @@ export default function BlogPostPage() {
         </div>
         <div className="pt-2">
           <div className="border-y border-primary py-2 text-3xl flex justify-between">
-            <PiHeartLight className="cursor-pointer hover:text-red-600" />
+            {liked ? (
+              <PiHeartFill
+                onClick={() => setLiked(false)}
+                className="cursor-pointer text-red-600"
+              />
+            ) : (
+              <PiHeartLight
+                onClick={() => setLiked(true)}
+                className="cursor-pointer hover:text-red-600"
+              />
+            )}
             <div className="flex">
-              <PiBookmarksSimple className="cursor-pointer hover:text-green-400" />
+              {saved ? (
+                <PiBookmarksSimpleFill
+                  onClick={() => setSaved(false)}
+                  className="cursor-pointer text-primary"
+                />
+              ) : (
+                <PiBookmarksSimple
+                  onClick={() => setSaved(true)}
+                  className="cursor-pointer hover:text-custGreen"
+                />
+              )}
               {user?.userId === entry.userId && (
                 <>
                   {moreOptions ? (

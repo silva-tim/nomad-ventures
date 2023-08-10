@@ -75,6 +75,7 @@ export default function BlogPostForm({ entry }: props) {
         photoAlt: alt_description,
         userId: entry?.userId,
         username: undefined,
+        date: '',
       };
       if (!entryId) {
         entryInput.userId = user?.userId;
@@ -130,7 +131,9 @@ export default function BlogPostForm({ entry }: props) {
         </Link>
         {missingPhoto && <span>Please add a photo.</span>}
         <div>
-          <button type="submit" className="bg-green-400 px-7 rounded-3xl">
+          <button
+            type="submit"
+            className="bg-custGreen text-primary px-7 rounded-3xl">
             {entry ? 'Update' : 'Publish'}
           </button>
         </div>
@@ -138,7 +141,7 @@ export default function BlogPostForm({ entry }: props) {
       {photoInfo && (
         <div className="h-max-content flex justify-center mt-4">
           <img
-            className="object-cover h-96"
+            className="object-cover h-40 md:h-96"
             src={photoInfo?.urls.regular}
             alt={photoInfo?.alt_description}
           />
@@ -150,8 +153,8 @@ export default function BlogPostForm({ entry }: props) {
           onPhotoClick={(photo) => handlePhotoClick(photo)}
         />
       )}
-      <div className="flex mt-4">
-        <div className="basis-1/2 bg-secondary me-1 flex justify-between">
+      <div className="flex mt-4 flex-wrap justify-between">
+        <div className="basis-full md:basis-1/2 bg-secondary flex justify-between">
           <input
             onChange={(e) => setLocation(e.target.value)}
             value={location}
@@ -159,23 +162,23 @@ export default function BlogPostForm({ entry }: props) {
             name="location"
             id="location"
             placeholder="Location"
-            className="p-3 outline-0 bg-secondary text-xl basis-full"
+            className="p-3 outline-0 bg-secondary md:text-xl basis-full"
             required
           />
           <FaLocationDot className="text-3xl mr-1 mt-3" />
         </div>
-        <div className="basis-1/2 bg-secondary flex justify-between">
+        <div className="basis-full md:basis-1/2 bg-secondary flex justify-between">
           <input
             onChange={(e) => setSearch(e.target.value)}
             value={search}
             type="text"
             placeholder="Search Unsplash for Image"
-            className="p-3 outline-0 bg-secondary text-xl basis-full"
+            className="p-3 outline-0 bg-secondary md:text-xl basis-full"
           />
           <button
             onClick={handleSearch}
             type="button"
-            className={`bg-primary bg-opacity-90 text-white px-3 w-24 ${
+            className={`bg-primary bg-opacity-90 text-white px-3 md:w-24 ${
               search && `hover:bg-tertiary `
             }`}
             disabled={search ? false : true}>

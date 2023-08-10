@@ -21,8 +21,11 @@ export default function LinkDrawer({ isOpen, onClick }: props) {
     <>
       {isOpen && (
         <div className="absolute top-0 left-0 flex w-full">
-          <div onClick={onClick} className="basis-4/5 bg-opacity-40 bg-black" />
-          <div className="bg-primary text-white font-roboto h-screen basis-1/5 p-5">
+          <div
+            onClick={onClick}
+            className="lg:basis-4/5 md:basis-2/3 bg-opacity-40 bg-black"
+          />
+          <div className="bg-primary text-white font-roboto h-screen basis-full md:basis-1/3 lg:basis-1/5 p-5">
             <div className="flex justify-end">
               <AiOutlineClose
                 onClick={onClick}
