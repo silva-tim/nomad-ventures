@@ -9,22 +9,22 @@ type props = {
 export default function DeleteModal({ onCancel, onDelete }: props) {
   return (
     <div className="fixed top-0 bg-black bg-opacity-40 w-full h-full z-20">
-      <div className="relative top-1/4 left-1/3 bg-white text-primary w-1/3 h-1/3 rounded">
+      <div className="relative top-1/4 md:left-1/3 bg-white text-primary w-full md:w-5/12 rounded">
         <div className="flex justify-end">
           <AiOutlineClose
             onClick={onCancel}
-            className="text-xl mt-3 mr-3 cursor-pointer"
+            className="text-xl mt-2 mr-3 cursor-pointer"
           />
         </div>
         <div className="flex justify-center pt-2">
-          <PiTrash className="text-5xl" />
+          <PiTrash className="text-3xl md:text-4xl lg:text-5xl" />
         </div>
         <div className="text-center pt-5">
-          <span className="text-lg">
+          <span className="text-sm md:text-lg lg:text-xl">
             Are you sure you want to delete this entry?
           </span>
         </div>
-        <div className="flex justify-around pt-9">
+        <div className="flex justify-around py-7 lg:pt-9">
           <button
             type="button"
             onClick={onDelete}
