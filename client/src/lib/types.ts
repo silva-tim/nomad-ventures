@@ -4,6 +4,7 @@ export type Entry = {
   location: string;
   body: string;
   photoURL: string;
+  photoURLBig: string;
   photoAlt: string;
   photoAuthor: string;
   photoAuthorLink: string;
@@ -15,7 +16,10 @@ export type Entry = {
 
 export type Photo = {
   id: string;
-  urls: { regular: string };
+  urls: {
+    full: string;
+    regular: string;
+  };
   user: {
     name: string;
     links: {

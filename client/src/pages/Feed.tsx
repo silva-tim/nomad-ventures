@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import BlogPostCard from '../components/BlogPostCard';
+import Loading from '../components/Loading';
 import { Entry } from '../lib/types';
 
 export default function Feed() {
@@ -28,7 +29,7 @@ export default function Feed() {
   }
 
   if (!entries) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
