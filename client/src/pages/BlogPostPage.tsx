@@ -14,6 +14,7 @@ import MoreOptions from '../components/MoreOptions';
 import DeleteModal from '../components/DeleteModal';
 import { deleteEntry } from '../lib/fetchFunctions';
 import { useUser } from '../components/UserContext';
+import Loading from '../components/Loading';
 
 export default function BlogPostPage() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function BlogPostPage() {
   }
 
   if (!entry) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -77,7 +78,7 @@ export default function BlogPostPage() {
       <div
         className="w-full bg-center bg-cover h-1/2 md:h-2/3 flex flex-wrap content-end"
         style={{
-          backgroundImage: `url(${entry.photoURL})`,
+          backgroundImage: `url(${entry.photoURLBig})`,
         }}>
         <div className="max-w-screen-lg w-11/12 m-auto text-left text-white text-shadow font-bold">
           <div className="basis-full">

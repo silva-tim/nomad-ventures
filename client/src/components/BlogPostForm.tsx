@@ -33,7 +33,10 @@ export default function BlogPostForm({ entry }: props) {
     entry
       ? {
           id: 'original',
-          urls: { regular: entry.photoURL },
+          urls: {
+            full: entry.photoURLBig,
+            regular: entry.photoURL,
+          },
           user: {
             name: entry.photoAuthor,
             links: {
@@ -56,7 +59,7 @@ export default function BlogPostForm({ entry }: props) {
         throw new Error('Error: 400 invalid request');
       }
       const {
-        urls: { regular },
+        urls: { full, regular },
         user: {
           name,
           links: { html },
@@ -70,6 +73,7 @@ export default function BlogPostForm({ entry }: props) {
         body,
         entryId,
         photoURL: regular,
+        photoURLBig: full,
         photoAuthor: name,
         photoAuthorLink: html,
         photoAlt: alt_description,
@@ -107,6 +111,7 @@ export default function BlogPostForm({ entry }: props) {
   }
 
   function handlePhotoClick(photo: Photo) {
+    console.log(photo.urls.full);
     setPhotoInfo(photo);
     setMissingPhoto(false);
     setPhotos(undefined);

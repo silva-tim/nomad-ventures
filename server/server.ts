@@ -47,6 +47,7 @@ app.post('/api/entries', authMiddleware, async (req, res, next) => {
       location,
       body,
       photoURL,
+      photoURLBig,
       photoAuthor,
       photoAuthorLink,
       photoAlt,
@@ -57,13 +58,14 @@ app.post('/api/entries', authMiddleware, async (req, res, next) => {
     validateInput(location);
     validateInput(body);
     validateInput(photoURL);
+    validateInput(photoURLBig);
     validateInput(photoAuthor);
     validateInput(photoAuthorLink);
     validateInput(photoAlt);
 
     const sql = `
-      insert into "entries" ("userId", "title", "subtitle", "location", "body", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink")
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      insert into "entries" ("userId", "title", "subtitle", "location", "body", "photoURL", "photoURLBig", "photoAlt", "photoAuthor", "photoAuthorLink")
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         returning *
     `;
     const params = [
@@ -73,6 +75,7 @@ app.post('/api/entries', authMiddleware, async (req, res, next) => {
       location,
       body,
       photoURL,
+      photoURLBig,
       photoAlt,
       photoAuthor,
       photoAuthorLink,
@@ -95,6 +98,7 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
       location,
       body,
       photoURL,
+      photoURLBig,
       photoAuthor,
       photoAuthorLink,
       photoAlt,
@@ -109,6 +113,7 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
     validateInput(location);
     validateInput(body);
     validateInput(photoURL);
+    validateInput(photoURLBig);
     validateInput(photoAuthor);
     validateInput(photoAuthorLink);
     validateInput(photoAlt);
@@ -120,9 +125,10 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
             "location" = $3,
             "body" = $4,
             "photoURL" = $5,
-            "photoAlt" = $6,
-            "photoAuthor" = $7,
-            "photoAuthorLink" = $8
+            "photoURLBig" = $6
+            "photoAlt" = $7,
+            "photoAuthor" = $8,
+            "photoAuthorLink" = $9
         where "entryId" = $9
     `;
     const params = [
@@ -131,6 +137,7 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
       location,
       body,
       photoURL,
+      photoURLBig,
       photoAlt,
       photoAuthor,
       photoAuthorLink,
@@ -182,7 +189,7 @@ app.get('/api/entries/:entryId', async (req, res, next) => {
 
     // Not using '*' so I don't return user's passwords
     const sql = `
-      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
+      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoURLBig", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
         join "users" using ("userId")
         where "entryId" = $1
@@ -204,7 +211,7 @@ app.get('/api/entries', async (req, res, next) => {
   try {
     // Not using '*' so I don't return user's passwords
     const sql = `
-      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
+      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoURLBig", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
         join "users" using ("userId")
     `;
@@ -231,7 +238,7 @@ app.get('/api/profiles/:username', async (req, res, next) => {
 
     // Not using '*' so I don't return user's passwords
     const sql2 = `
-      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
+      select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoURLBig", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
         join "users" using ("userId")
         where "userId" = $1

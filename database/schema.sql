@@ -26,6 +26,7 @@ CREATE TABLE "public"."entries" (
 	"body" TEXT NOT NULL,
 	"date" TIMESTAMP DEFAULT now() NOT NULL,
   "photoURL" TEXT NOT NULL,
+  "photoURLBig" TEXT NOT NULL,
 	"photoAlt" TEXT NOT NULL,
 	"photoAuthor" TEXT NOT NULL,
 	"photoAuthorLink" TEXT NOT NULL,
