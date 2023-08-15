@@ -137,6 +137,7 @@ export default function SignInSignUpModal({
                   onChange={(e) => setUsername(e.target.value)}
                   className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
                   autoFocus
+                  maxLength={18}
                   required
                 />
               </div>

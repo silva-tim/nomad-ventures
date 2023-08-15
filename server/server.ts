@@ -221,6 +221,7 @@ app.get('/api/entries', async (req, res, next) => {
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoURLBig", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
         join "users" using ("userId")
+        order by "date" desc
     `;
     const result = await db.query(sql);
     res.status(200).json(result.rows);

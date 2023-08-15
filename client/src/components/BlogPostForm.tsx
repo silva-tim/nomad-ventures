@@ -150,6 +150,7 @@ export default function BlogPostForm({ entry }: props) {
             id="location"
             placeholder="Location"
             className="p-3 outline-0 bg-secondary md:text-xl basis-full"
+            maxLength={25}
             required
           />
           <FaLocationDot className="text-3xl mr-1 mt-3" />
@@ -182,6 +183,7 @@ export default function BlogPostForm({ entry }: props) {
         id="title"
         placeholder="Title"
         className="w-full p-3 mt-2 outline-0 text-4xl"
+        maxLength={25}
         required
       />
       <input
@@ -194,6 +196,7 @@ export default function BlogPostForm({ entry }: props) {
         id="subtitle"
         placeholder="Subtitle"
         className="w-full p-3 mt-2 outline-0 text-2xl"
+        maxLength={25}
         required
       />
       <textarea
