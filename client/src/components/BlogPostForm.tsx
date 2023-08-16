@@ -23,7 +23,7 @@ export default function BlogPostForm({ entry }: props) {
   const [search, setSearch] = useState('');
   const [photos, setPhotos] = useState<Photo[]>();
   const [missingPhoto, setMissingPhoto] = useState(false);
-  const [loadingAnimation, setLoadingAnimation] = useState(false);
+  const [searchingAnimation, setSearchingAnimation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>();
   const [fullEntry, setFullEntry] = useState(
@@ -71,7 +71,7 @@ export default function BlogPostForm({ entry }: props) {
   }
 
   async function handleSearch() {
-    setLoadingAnimation(true);
+    setSearchingAnimation(true);
     try {
       const resultJSON = await searchUnsplash(search);
       setPhotos(resultJSON.results);
@@ -79,7 +79,7 @@ export default function BlogPostForm({ entry }: props) {
     } catch (err) {
       setError(err);
     } finally {
-      setLoadingAnimation(false);
+      setSearchingAnimation(false);
     }
   }
 
@@ -170,8 +170,10 @@ export default function BlogPostForm({ entry }: props) {
               search && `hover:bg-tertiary `
             }`}
             disabled={search ? false : true}>
-            {loadingAnimation && <PiSpinnerGap className="animate-spin ml-5" />}
-            {!loadingAnimation && 'Search'}
+            {searchingAnimation && (
+              <PiSpinnerGap className="animate-spin ml-5" />
+            )}
+            {!searchingAnimation && 'Search'}
           </button>
         </div>
       </div>
