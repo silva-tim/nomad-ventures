@@ -81,7 +81,10 @@ app.post('/api/entries', authMiddleware, async (req, res, next) => {
       photoAuthorLink,
     ];
     const result = await db.query(sql, params);
-    res.status(201).json(result.rows);
+    if (!result.rows[0]) {
+      throw new ClientError(500, 'Something went wrong.');
+    }
+    res.status(201).json(result.rows[0]);
   } catch (err) {
     next(err);
   }
@@ -125,11 +128,12 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
             "location" = $3,
             "body" = $4,
             "photoURL" = $5,
-            "photoURLBig" = $6
+            "photoURLBig" = $6,
             "photoAlt" = $7,
             "photoAuthor" = $8,
             "photoAuthorLink" = $9
-        where "entryId" = $9
+        where "entryId" = $10
+        returning *
     `;
     const params = [
       title,
@@ -143,7 +147,10 @@ app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
       photoAuthorLink,
       entryId,
     ];
-    await db.query(sql, params);
+    const result = await db.query(sql, params);
+    if (!result.rows[0]) {
+      throw new ClientError(500, 'Something went wrong.');
+    }
     res.sendStatus(204);
   } catch (err) {
     next(err);
@@ -214,6 +221,7 @@ app.get('/api/entries', async (req, res, next) => {
       select "entryId", "userId", "title", "subtitle", "location", "body", "date", "photoURL", "photoURLBig", "photoAlt", "photoAuthor", "photoAuthorLink", "userId", "username"
         from "entries"
         join "users" using ("userId")
+        order by "date" desc
     `;
     const result = await db.query(sql);
     res.status(200).json(result.rows);

@@ -1,5 +1,4 @@
 import { FaLocationDot } from 'react-icons/fa6';
-import { PiHeartFill } from 'react-icons/pi';
 import { Link } from 'react-router-dom';
 import { Entry } from '../lib/types';
 
@@ -26,10 +25,6 @@ export default function BlogPostCard({ entry }: props) {
               {date.toDateString().slice(3)}
             </span>
           </span>
-        </div>
-        <div className="flex">
-          <PiHeartFill className="text-lg md:text-2xl mr-1 text-red-600" />
-          <span className="text-sm">232</span>
         </div>
       </div>
       <Link to={`/post/${entry.entryId}`}>

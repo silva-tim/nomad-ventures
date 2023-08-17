@@ -68,7 +68,31 @@ export default function SignInSignUpModal({
   }
 
   if (error) {
-    onClose();
+    return (
+      <div className="fixed top-0 left-0 bg-black bg-opacity-40 w-full h-full z-20">
+        <div className="relative top-1/4 m-auto bg-white text-primary md:w-5/12 rounded">
+          <div className="flex justify-end">
+            <AiOutlineClose
+              onClick={onClose}
+              className="text-xl mt-3 mr-3 cursor-pointer"
+            />
+          </div>
+          <div className="text-center pt-2">
+            <span className="basis-full text-2xl">Not a valid login!</span>
+          </div>
+          <div className="flex justify-around pt-7 pb-5">
+            <button
+              type="button"
+              onClick={() => {
+                setError(undefined);
+              }}
+              className="py-3 px-7 w-1/2 min-w-max bg-primary text-white">
+              Back to Sign In
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -113,6 +137,7 @@ export default function SignInSignUpModal({
                   onChange={(e) => setUsername(e.target.value)}
                   className="outline-0 text-xl p-2 w-full border-gray-300 border-b"
                   autoFocus
+                  maxLength={18}
                   required
                 />
               </div>

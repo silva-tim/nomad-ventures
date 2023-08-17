@@ -9,7 +9,7 @@ type props = {
 export default function DeleteModal({ onCancel, onDelete }: props) {
   return (
     <div className="fixed top-0 bg-black bg-opacity-40 w-full h-full z-20">
-      <div className="relative top-1/4 md:left-1/3 bg-white text-primary w-full md:w-5/12 rounded">
+      <div className="relative top-1/4 md:left-1/3 bg-white text-primary w-full md:w-1/3 rounded">
         <div className="flex justify-end">
           <AiOutlineClose
             onClick={onCancel}

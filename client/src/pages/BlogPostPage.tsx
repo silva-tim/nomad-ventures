@@ -1,11 +1,4 @@
-import {
-  PiBookmarksSimple,
-  PiBookmarksSimpleFill,
-  PiDotsThreeCircleFill,
-  PiDotsThreeCircleLight,
-  PiHeartFill,
-  PiHeartLight,
-} from 'react-icons/pi';
+import { PiDotsThreeCircleFill, PiDotsThreeCircleLight } from 'react-icons/pi';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Entry } from '../lib/types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -24,8 +17,6 @@ export default function BlogPostPage() {
   const [entry, setEntry] = useState<Entry>();
   const [moreOptions, setMoreOptions] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     async function getEntry() {
@@ -125,46 +116,22 @@ export default function BlogPostPage() {
           </span>
         </div>
         <div className="pt-2">
-          <div className="border-y border-primary py-2 text-3xl flex justify-between">
-            {liked ? (
-              <PiHeartFill
-                onClick={() => setLiked(false)}
-                className="cursor-pointer text-red-600"
-              />
-            ) : (
-              <PiHeartLight
-                onClick={() => setLiked(true)}
-                className="cursor-pointer hover:text-red-600"
-              />
+          <div className="border-y border-primary py-2 text-3xl flex justify-end">
+            {user?.userId === entry.userId && (
+              <>
+                {moreOptions ? (
+                  <PiDotsThreeCircleFill
+                    onClick={() => setMoreOptions(!moreOptions)}
+                    className="cursor-pointer"
+                  />
+                ) : (
+                  <PiDotsThreeCircleLight
+                    onClick={() => setMoreOptions(!moreOptions)}
+                    className="cursor-pointer"
+                  />
+                )}
+              </>
             )}
-            <div className="flex">
-              {saved ? (
-                <PiBookmarksSimpleFill
-                  onClick={() => setSaved(false)}
-                  className="cursor-pointer text-primary"
-                />
-              ) : (
-                <PiBookmarksSimple
-                  onClick={() => setSaved(true)}
-                  className="cursor-pointer hover:text-custGreen"
-                />
-              )}
-              {user?.userId === entry.userId && (
-                <>
-                  {moreOptions ? (
-                    <PiDotsThreeCircleFill
-                      onClick={() => setMoreOptions(!moreOptions)}
-                      className="cursor-pointer"
-                    />
-                  ) : (
-                    <PiDotsThreeCircleLight
-                      onClick={() => setMoreOptions(!moreOptions)}
-                      className="cursor-pointer"
-                    />
-                  )}
-                </>
-              )}
-            </div>
           </div>
           <div className="relative flex justify-end">
             {moreOptions && (

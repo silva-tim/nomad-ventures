@@ -7,7 +7,7 @@ export async function createEntry(
   token: string | undefined
 ) {
   if (!token) {
-    throw new Error('Must be signed in.');
+    throw new Error('Unauthorized. Must be signed in to do this.');
   }
   const req = {
     method: 'POST',
@@ -29,7 +29,7 @@ export async function updateEntry(
   token: string | undefined
 ) {
   if (!token) {
-    throw new Error('Must be signed in.');
+    throw new Error('Unauthorized. Must be signed in to do this.');
   }
   const req = {
     method: 'PUT',
@@ -51,7 +51,7 @@ export async function deleteEntry(
   token: string | undefined
 ) {
   if (!token) {
-    throw new Error('Must be signed in.');
+    throw new Error('Unauthorized. Must be signed in to do this.');
   }
   const req = {
     method: 'DELETE',
