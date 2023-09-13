@@ -8,6 +8,7 @@ import DeleteModal from '../components/DeleteModal';
 import { deleteEntry } from '../lib/fetchFunctions';
 import { useUser } from '../components/UserContext';
 import Loading from '../components/Loading';
+import ReactMarkdown from 'react-markdown';
 
 export default function BlogPostPage() {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ export default function BlogPostPage() {
           </div>
           <div className="pt-2 pb-10 text-lg">
             <p className="first-letter:text-4xl first-letter:font-bold first-letter:font-serif">
-              {entry.body}
+              <ReactMarkdown>{entry.body}</ReactMarkdown>
             </p>
           </div>
         </div>
