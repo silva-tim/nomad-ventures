@@ -142,7 +142,7 @@ export default function BlogPostPage() {
               />
             )}
           </div>
-          <div className="pt-2 text-lg">
+          <div className="pt-2 pb-10 text-lg">
             <p className="first-letter:text-4xl first-letter:font-bold first-letter:font-serif">
               {entry.body}
             </p>
